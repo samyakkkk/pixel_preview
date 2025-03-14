@@ -1,7 +1,9 @@
 name: pixel_preview
 description: "A new Flutter package project."
 version: 0.0.1
-homepage:
+homepage: https://github.com/samyakkkk/pixel_preview
+documentation: https://github.com/samyakkkk/pixel_preview/blob/main/README.md
+repository: https://github.com/samyakkkk/pixel_preview
 
 environment:
   sdk: ^3.2.4
