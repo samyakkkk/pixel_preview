@@ -5,7 +5,7 @@ import 'package:example/component.dart';
 class ResponsiveScreen extends StatefulWidget {
   final String title;
 
-  const ResponsiveScreen({Key? key, required this.title}) : super(key: key);
+  const ResponsiveScreen({super.key, required this.title});
 
   @override
   State<ResponsiveScreen> createState() => _ResponsiveScreenState();
@@ -31,7 +31,6 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
         final isMediumScreen =
             screenSize.width >= 600 && screenSize.width < 1024;
         final isLargeScreen = screenSize.width >= 1024;
-        print(screenSize);
         return Scaffold(
           appBar: AppBar(
             title: Text(widget.title),
@@ -197,7 +196,7 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
               decoration: BoxDecoration(
                 color:
                     isSelected
-                        ? lightBlue.withOpacity(0.1)
+                        ? lightBlue.withValues(alpha: 0.1)
                         : Colors.transparent,
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -224,7 +223,7 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
               ),
             ),
             selected: isSelected,
-            selectedTileColor: lightBlue.withOpacity(0.1),
+            selectedTileColor: lightBlue.withValues(alpha: 0.1),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
@@ -502,7 +501,7 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
               final activity = activities[index];
               return ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: lightBlue.withOpacity(0.2),
+                  backgroundColor: lightBlue.withValues(alpha: 0.2),
                   child: Text(
                     activity['user']!.substring(0, 1),
                     style: const TextStyle(

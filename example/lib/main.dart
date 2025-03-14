@@ -16,9 +16,9 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   static const Color primaryBlue = Color(0xFF1A365D);
-  static const Color lightBlue = Color(0xFF4299E1);
-  static const Color coralRed = Color(0xFFFF6B6B);
-
+  // static const Color lightBlue = Color(0xFF4299E1);
+  // static const Color coralRed = Color(0xFFFF6B6B);
+  bool component = false;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -28,18 +28,22 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       home: Scaffold(
-        body: true ? PixelPreview(
-          kind: PixelKind.screen,
-          child: ResponsiveScreen(title: "Pixel Preview Dashboard"),
-        ) : PixelPreview(
-          kind: PixelKind.component,
-          child: ResponsiveAppComponent(
-            title: 'Pixel Preview Demo',
-            description: 'A responsive component that adapts to various constraint sizes.',
-            icon: Icons.dashboard,
-            onTap: () {},
-          ),
-        ),
+        body:
+            component
+                ? PixelPreview(
+                  kind: PixelKind.component,
+                  child: ResponsiveAppComponent(
+                    title: 'Pixel Preview Demo',
+                    description:
+                        'A responsive component that adapts to various constraint sizes.',
+                    icon: Icons.dashboard,
+                    onTap: () {},
+                  ),
+                )
+                : PixelPreview(
+                  kind: PixelKind.screen,
+                  child: ResponsiveScreen(title: "Pixel Preview Dashboard"),
+                ),
       ),
     );
   }

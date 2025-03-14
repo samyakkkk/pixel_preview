@@ -12,7 +12,8 @@ class PixelTheme {
   // Background colors
   static const Color lightBackground = Color(0xFFF8F8F8);
   static const Color darkBackground = Color(0xFF333333);
-  static const Color canvasBackground = Color(0xFFF5F5F7); // Light color for canvas
+  static const Color canvasBackground =
+      Color(0xFFF5F5F7); // Light color for canvas
 
   // Text colors
   static const Color primaryText = Color(0xFF0066A6);
@@ -50,7 +51,7 @@ class PixelTheme {
     borderRadius: BorderRadius.circular(12.0),
     boxShadow: [
       BoxShadow(
-        color: Colors.black.withOpacity(0.1),
+        color: Colors.black.withValues(alpha: 0.1),
         blurRadius: 8.0,
         offset: const Offset(0, 2),
       ),
@@ -58,14 +59,15 @@ class PixelTheme {
   );
 
   // Frame border style
-  static BoxDecoration frameBorderDecoration({Color backgroundColor = Colors.transparent}) {
+  static BoxDecoration frameBorderDecoration(
+      {Color backgroundColor = Colors.transparent}) {
     return BoxDecoration(
       color: backgroundColor,
-      border: Border.all(color: primaryBlue.withOpacity(0.3), width: 1.5),
+      border: Border.all(color: primaryBlue.withValues(alpha: 0.3), width: 1.5),
       borderRadius: BorderRadius.circular(4.0),
       boxShadow: [
         BoxShadow(
-          color: primaryBlue.withOpacity(0.1),
+          color: primaryBlue.withValues(alpha: 0.1),
           blurRadius: 10,
           offset: const Offset(0, 5),
         ),
@@ -75,12 +77,12 @@ class PixelTheme {
 
   // Handle style
   static BoxDecoration handleDecoration = BoxDecoration(
-    color: primaryBlue.withOpacity(0.8),
+    color: primaryBlue.withValues(alpha: 0.8),
     borderRadius: BorderRadius.circular(2),
   );
 
   // Active handle highlight
-  static Color activeHandleHighlight = lightBlue.withOpacity(0.3);
+  static Color activeHandleHighlight = lightBlue.withValues(alpha: 0.3);
 
   // Text styles
   static TextStyle titleTextStyle = const TextStyle(

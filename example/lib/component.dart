@@ -8,18 +8,19 @@ class ResponsiveAppComponent extends StatefulWidget {
   final VoidCallback? onTap;
 
   const ResponsiveAppComponent({
-    Key? key,
+    super.key,
     required this.title,
     required this.description,
     required this.icon,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   State<ResponsiveAppComponent> createState() => _ResponsiveAppComponentState();
 }
 
-class _ResponsiveAppComponentState extends State<ResponsiveAppComponent> with SingleTickerProviderStateMixin {
+class _ResponsiveAppComponentState extends State<ResponsiveAppComponent>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   bool _isHovering = false;
 
@@ -51,7 +52,8 @@ class _ResponsiveAppComponentState extends State<ResponsiveAppComponent> with Si
       builder: (context, constraints) {
         // Determine layout based on available width
         final isCompact = constraints.maxWidth < 400;
-        final isMedium = constraints.maxWidth >= 400 && constraints.maxWidth < 700;
+        final isMedium =
+            constraints.maxWidth >= 400 && constraints.maxWidth < 700;
         final isExpanded = constraints.maxWidth >= 700;
 
         return MouseRegion(
@@ -63,11 +65,14 @@ class _ResponsiveAppComponentState extends State<ResponsiveAppComponent> with Si
               duration: const Duration(milliseconds: 200),
               padding: EdgeInsets.all(isCompact ? 12.0 : 16.0),
               decoration: BoxDecoration(
-                color: _isHovering ? lightGray.withOpacity(0.7) : Colors.white,
+                color:
+                    _isHovering
+                        ? lightGray.withValues(alpha: 0.7)
+                        : Colors.white,
                 borderRadius: BorderRadius.circular(16.0),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10.0,
                     offset: const Offset(0, 4),
                   ),
@@ -105,10 +110,7 @@ class _ResponsiveAppComponentState extends State<ResponsiveAppComponent> with Si
           const SizedBox(height: 8),
           Text(
             widget.description,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.black87,
-            ),
+            style: const TextStyle(fontSize: 14, color: Colors.black87),
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
           ),
@@ -139,10 +141,7 @@ class _ResponsiveAppComponentState extends State<ResponsiveAppComponent> with Si
                 const SizedBox(height: 8),
                 Text(
                   widget.description,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.black87,
-                  ),
+                  style: const TextStyle(fontSize: 14, color: Colors.black87),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -176,10 +175,7 @@ class _ResponsiveAppComponentState extends State<ResponsiveAppComponent> with Si
                 const SizedBox(height: 12),
                 Text(
                   widget.description,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.black87,
-                  ),
+                  style: const TextStyle(fontSize: 16, color: Colors.black87),
                 ),
                 const SizedBox(height: 16),
                 _buildFeatureTags(),
@@ -198,14 +194,10 @@ class _ResponsiveAppComponentState extends State<ResponsiveAppComponent> with Si
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: coralRed.withOpacity(0.1),
+        color: coralRed.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Icon(
-        widget.icon,
-        size: size * 0.6,
-        color: coralRed,
-      ),
+      child: Icon(widget.icon, size: size * 0.6, color: coralRed),
     );
   }
 
@@ -216,17 +208,30 @@ class _ResponsiveAppComponentState extends State<ResponsiveAppComponent> with Si
         backgroundColor: primaryBlue,
         foregroundColor: Colors.white,
         padding: EdgeInsets.symmetric(
-          horizontal: small ? 12 : expanded ? 24 : 16,
-          vertical: small ? 8 : expanded ? 16 : 12,
+          horizontal:
+              small
+                  ? 12
+                  : expanded
+                  ? 24
+                  : 16,
+          vertical:
+              small
+                  ? 8
+                  : expanded
+                  ? 16
+                  : 12,
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       child: Text(
         expanded ? 'Learn More' : 'View',
         style: TextStyle(
-          fontSize: small ? 12 : expanded ? 16 : 14,
+          fontSize:
+              small
+                  ? 12
+                  : expanded
+                  ? 16
+                  : 14,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -249,9 +254,9 @@ class _ResponsiveAppComponentState extends State<ResponsiveAppComponent> with Si
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Text(
         label,
@@ -272,10 +277,10 @@ class ResponsiveComponentGrid extends StatelessWidget {
   final double spacing;
 
   const ResponsiveComponentGrid({
-    Key? key,
+    super.key,
     required this.components,
     this.spacing = 16.0,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -300,7 +305,14 @@ class ResponsiveComponentGrid extends StatelessWidget {
             crossAxisCount: crossAxisCount,
             crossAxisSpacing: spacing,
             mainAxisSpacing: spacing,
-            childAspectRatio: crossAxisCount == 1 ? 1.6 : crossAxisCount == 2? 1.2: crossAxisCount ==3 ? 1.1 : 1,
+            childAspectRatio:
+                crossAxisCount == 1
+                    ? 1.6
+                    : crossAxisCount == 2
+                    ? 1.2
+                    : crossAxisCount == 3
+                    ? 1.1
+                    : 1,
           ),
           itemCount: components.length,
           itemBuilder: (context, index) => components[index],

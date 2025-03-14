@@ -96,7 +96,8 @@ class _FrameWidgetState extends State<FrameWidget> {
                     child: Container(
                       width: _width,
                       height: _height,
-                      decoration: PixelTheme.frameBorderDecoration(backgroundColor: widget.backgroundColor),
+                      decoration: PixelTheme.frameBorderDecoration(
+                          backgroundColor: widget.backgroundColor),
                       child: Center(child: widget.child),
                     ),
                   ),
@@ -123,10 +124,9 @@ class _FrameWidgetState extends State<FrameWidget> {
                       },
                       child: Container(
                         width: handleSize,
-                        color:
-                            _draggingRight
-                                ? PixelTheme.activeHandleHighlight
-                                : Colors.transparent,
+                        color: _draggingRight
+                            ? PixelTheme.activeHandleHighlight
+                            : Colors.transparent,
                         child: Center(
                           child: Container(
                             width: 4,
@@ -160,10 +160,9 @@ class _FrameWidgetState extends State<FrameWidget> {
                       },
                       child: Container(
                         height: handleSize,
-                        color:
-                            _draggingBottom
-                                ? PixelTheme.activeHandleHighlight
-                                : Colors.transparent,
+                        color: _draggingBottom
+                            ? PixelTheme.activeHandleHighlight
+                            : Colors.transparent,
                         child: Center(
                           child: Container(
                             width: 30,
@@ -201,10 +200,9 @@ class _FrameWidgetState extends State<FrameWidget> {
                       child: Container(
                         width: handleSize,
                         height: handleSize,
-                        color:
-                            _draggingCorner
-                                ? PixelTheme.activeHandleHighlight
-                                : Colors.transparent,
+                        color: _draggingCorner
+                            ? PixelTheme.activeHandleHighlight
+                            : Colors.transparent,
                         child: Center(
                           child: Icon(
                             Icons.drag_handle,

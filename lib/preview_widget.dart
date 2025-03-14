@@ -64,10 +64,15 @@ class _PixelPreviewState extends State<PixelPreview> {
                   size: 50,
                   color: PixelTheme.primaryText,
                 ),
-                SizedBox(height: 16,),
+                SizedBox(
+                  height: 16,
+                ),
                 Text(
                   'Please switch to landscape mode to use Pixel Preview.',
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: PixelTheme.primaryText),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge!
+                      .copyWith(color: PixelTheme.primaryText),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -283,7 +288,7 @@ class _PixelPreviewState extends State<PixelPreview> {
                   ChoiceChip(
                     label: Text('Portrait'),
                     selected: !_isLandscape,
-                    selectedColor: PixelTheme.lightBlue.withOpacity(0.3),
+                    selectedColor: PixelTheme.lightBlue.withValues(alpha: 0.3),
                     labelStyle: TextStyle(
                         color: !_isLandscape
                             ? PixelTheme.primaryBlue
@@ -306,7 +311,7 @@ class _PixelPreviewState extends State<PixelPreview> {
                   ChoiceChip(
                     label: Text('Landscape'),
                     selected: _isLandscape,
-                    selectedColor: PixelTheme.lightBlue.withOpacity(0.3),
+                    selectedColor: PixelTheme.lightBlue.withValues(alpha: 0.3),
                     labelStyle: TextStyle(
                         color: _isLandscape
                             ? PixelTheme.primaryBlue
@@ -371,7 +376,7 @@ class _PixelPreviewState extends State<PixelPreview> {
         padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected
-              ? PixelTheme.lightBlue.withOpacity(0.2)
+              ? PixelTheme.lightBlue.withValues(alpha: 0.2)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(4),
           border: Border.all(
