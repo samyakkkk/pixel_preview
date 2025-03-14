@@ -21,7 +21,7 @@ class PixelPreview extends StatefulWidget {
 }
 
 class _PixelPreviewState extends State<PixelPreview> {
-  Color _backgroundColor = PixelTheme.canvasBackground;
+  Color _backgroundColor = PixelTheme.lightBackground;
 
   // Size constraints
   double _width = 500.0; // Default width up to 500px
@@ -179,7 +179,7 @@ class _PixelPreviewState extends State<PixelPreview> {
         // Radio buttons for background color
         RadioListTile<Color>(
           title: Text('Light', style: PixelTheme.bodyTextStyle),
-          value: PixelTheme.canvasBackground,
+          value: PixelTheme.lightBackground,
           activeColor: PixelTheme.primaryBlue,
           groupValue: _backgroundColor,
           onChanged: (Color? value) {
