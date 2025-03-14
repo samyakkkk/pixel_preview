@@ -1,13 +1,9 @@
-<p align="center">
-  <img src="media/logo.jpg" alt="PixelPreview" width="90" />
-</p>
-
 <h1 align="center">Pixel Preview</h1>
 
 <p align="center">A powerful Flutter package for visualizing and testing UI components and screens in isolation</p>
 
-<p align="center">
-  <a href="https://pub.dev/packages/pixel_preview">
+<!-- <p align="center"> -->
+  <!-- <a href="https://pub.dev/packages/pixel_preview">
     <img src="https://img.shields.io/pub/v/pixel_preview.svg?color=0066A6" alt="Pub Version" />
   </a>
   <a href="https://github.com/samyakkkk/pixel_preview/blob/main/LICENSE">
@@ -16,7 +12,7 @@
   <a href="https://github.com/samyakkkk/pixel_preview/stargazers">
     <img src="https://img.shields.io/github/stars/samyakkkk/pixel_preview?style=flat&color=F05042" alt="Stars" />
   </a>
-</p>
+</p> -->
 
 <div align="center">
   <p><b>Component Preview</b></p>
