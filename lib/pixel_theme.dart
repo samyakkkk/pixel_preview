@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-/// Theme class for PixelPreview widgets based on the PixelApps brand colors
+/// Theme class for PixelPreview widgets
 class PixelTheme {
-  // Primary colors from the PixelApps logo
+  // Primary colors
   static const Color primaryBlue = Color(0xFF0066A6);
   static const Color lightBlue = Color(0xFF42B0F0);
   static const Color coralRed = Color(0xFFF05042);

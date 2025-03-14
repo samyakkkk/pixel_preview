@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 /// A responsive component that adapts to various constraint sizes.
-/// This component uses the PixelApps brand colors and demonstrates
-/// how to build a mid-scale app component with responsive behavior.
 class ResponsiveAppComponent extends StatefulWidget {
   final String title;
   final String description;
@@ -25,7 +23,6 @@ class _ResponsiveAppComponentState extends State<ResponsiveAppComponent> with Si
   late AnimationController _controller;
   bool _isHovering = false;
 
-  // PixelApps brand colors
   static const Color primaryBlue = Color(0xFF1A365D);
   static const Color lightBlue = Color(0xFF4299E1);
   static const Color coralRed = Color(0xFFFF6B6B);
@@ -288,7 +285,7 @@ class ResponsiveComponentGrid extends StatelessWidget {
         int crossAxisCount;
         if (constraints.maxWidth < 600) {
           crossAxisCount = 1; // Single column for small screens
-        } else if (constraints.maxWidth < 900) {
+        } else if (constraints.maxWidth < 700) {
           crossAxisCount = 2; // Two columns for medium screens
         } else if (constraints.maxWidth < 1200) {
           crossAxisCount = 3; // Three columns for large screens
@@ -303,7 +300,7 @@ class ResponsiveComponentGrid extends StatelessWidget {
             crossAxisCount: crossAxisCount,
             crossAxisSpacing: spacing,
             mainAxisSpacing: spacing,
-            childAspectRatio: crossAxisCount == 1 ? 2.5 : 1.2,
+            childAspectRatio: crossAxisCount == 1 ? 1.6 : crossAxisCount == 2? 1.2: crossAxisCount ==3 ? 1.1 : 1,
           ),
           itemCount: components.length,
           itemBuilder: (context, index) => components[index],
