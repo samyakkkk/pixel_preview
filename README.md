@@ -16,9 +16,9 @@
 
 <div align="center">
   <p><b>Component Preview</b></p>
-  <img src="media/component-preview.gif" alt="Component Preview" width="80%" />
+  <img src="https://github.com/samyakkkk/pixel_preview/raw/main/media/component-preview.gif" alt="Component Preview" width="80%" />
   <p><b>Screen Preview</b></p>
-  <img src="media/screen-preview.gif" alt="Screen Preview" width="80%" />
+  <img src="https://github.com/samyakkkk/pixel_preview/raw/main/media/screen-preview.gif" alt="Screen Preview" width="80%" />
 </div>
 
 ## ✨ Features
@@ -31,19 +31,22 @@
 - **Orientation Testing**: Switch between portrait and landscape orientations
 - **Development Mode Only**: Automatically disabled in release builds for zero production impact
 
+## 📱 Cross-Device Support
+
+Pixel Preview works seamlessly across all devices where Flutter runs. Unlike other preview tools that may have platform limitations, you can use Pixel Preview on:
+
+- **Desktop**: Windows, macOS, and Linux
+- **Mobile**: iOS and Android phones and tablets
+- **Web**: Any modern browser
+
+This cross-platform capability means you can preview your UI components and screens on the same device you're developing on, regardless of what that device is. The preview environment automatically adapts to your screen size, providing a consistent experience across all platforms.
+
 ## 🚀 Getting Started
 
 Add PixelPreview to your `pubspec.yaml`:
 
-```yaml
-dependencies:
-  pixel_preview: ^0.0.1
-```
-
-Run the following command to install:
-
 ```bash
-flutter pub get
+flutter pub add pixel_preview
 ```
 
 Import the package in your Dart code:
@@ -123,6 +126,41 @@ PixelPreview(
   ),
 )
 ```
+
+## 🔄 Why Pixel Preview?
+
+<table>
+  <tr>
+    <th>Feature</th>
+    <th>Pixel Preview</th>
+    <th>Other Preview Tools</th>
+  </tr>
+  <tr>
+    <td>Cross-platform support</td>
+    <td>✅ All platforms where Flutter runs</td>
+    <td>❌ Often limited to specific platforms</td>
+  </tr>
+  <tr>
+    <td>Component & Screen modes</td>
+    <td>✅ Specialized modes for both</td>
+    <td>❌ Usually focused on just one</td>
+  </tr>
+  <tr>
+    <td>Interactive resizing</td>
+    <td>✅ Intuitive drag handles</td>
+    <td>❌ Often fixed sizes only</td>
+  </tr>
+  <tr>
+    <td>Background options</td>
+    <td>✅ Light, dark, transparent</td>
+    <td>❌ Limited or no options</td>
+  </tr>
+  <tr>
+    <td>Orientation switching</td>
+    <td>✅ One-click toggle</td>
+    <td>❌ Often requires restart</td>
+  </tr>
+</table>
 
 ## ⚠️ Limitations
 
