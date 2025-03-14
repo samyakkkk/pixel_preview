@@ -28,7 +28,10 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       home: Scaffold(
-        body: PixelPreview(
+        body: true ? PixelPreview(
+          kind: PixelKind.screen,
+          child: ResponsiveScreen(title: "Pixel Preview Dashboard"),
+        ) : PixelPreview(
           kind: PixelKind.component,
           child: ResponsiveAppComponent(
             title: 'Pixel Preview Demo',
