@@ -1,14 +1,6 @@
 # Media files (GIFs, images, etc.)
 media/
 
-# Example app
-example/
-
-# Documentation files
-README.md
-CHANGELOG.md
-LICENSE
-
 # Development files
 .github/
 .vscode/
