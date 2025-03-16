@@ -30,7 +30,8 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         body: PixelApp(
           title: 'Pixel UI Kit',
-          components: [
+          // Using a single widgets list instead of separate components and screens lists
+          widgets: [
             // Component 1
             PixelPreview(
               kind: PixelKind.component,
@@ -61,8 +62,16 @@ class _MyAppState extends State<MyApp> {
                 onTap: () {},
               ),
             ),
-          ],
-          screens: [
+            // Component 4
+            PixelPreview(
+              kind: PixelKind.component,
+              child: ResponsiveAppComponent(
+                title: 'Settings Panel',
+                description: 'Configuration panel with responsive layout.',
+                icon: Icons.settings,
+                onTap: () {},
+              ),
+            ),
             // Screen 1
             PixelPreview(
               kind: PixelKind.screen,
@@ -73,7 +82,17 @@ class _MyAppState extends State<MyApp> {
               kind: PixelKind.screen,
               child: ResponsiveScreen(title: "Analytics"),
             ),
+            // Screen 3
+            PixelPreview(
+              kind: PixelKind.screen,
+              child: ResponsiveScreen(title: "User Profile"),
+            ),
           ],
+          // Customize grid layout
+          gridSpacing: 20.0,
+          largeScreenColumns: 4,
+          mediumScreenColumns: 3,
+          smallScreenColumns: 2,
         ),
       ),
     );

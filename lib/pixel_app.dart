@@ -138,12 +138,10 @@ class _PixelAppState extends State<PixelApp> with SingleTickerProviderStateMixin
           columns = widget.mediumScreenColumns;
         }
         
-        // Calculate appropriate aspect ratio based on screen width
-        double aspectRatio = kind == PixelKind.component ? 1.5 : 0.6;
-        if (constraints.maxWidth >= 1200) {
-          // Adjust aspect ratio for larger screens
-          aspectRatio = kind == PixelKind.component ? 1.8 : 0.7;
-        }
+        // Fixed aspect ratio based on the thumbnail sizes
+        // Component: 300 x 200 = 1.5 aspect ratio
+        // Screen: 393 x 852 = 0.46 aspect ratio
+        double aspectRatio = kind == PixelKind.component ? 1.5 : 0.46;
 
         return items.isEmpty
             ? _buildEmptyState(kind)
@@ -180,14 +178,13 @@ class _PixelAppState extends State<PixelApp> with SingleTickerProviderStateMixin
     
     return Card(
       elevation: 2,
+      margin: EdgeInsets.all(widget.gridSpacing / 2),
+      clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(color: PixelTheme.lightGray, width: 1),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: thumbnailChild,
-      ),
+      child: thumbnailChild,
     );
   }
 

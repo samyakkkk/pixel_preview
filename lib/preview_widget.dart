@@ -256,24 +256,59 @@ class _PixelPreviewState extends State<PixelPreview> {
 
   /// Builds a simplified view for thumbnail mode without the sidebar
   Widget _buildThumbnailView() {
-    return Scaffold(
-      backgroundColor: PixelTheme.canvasBackground,
-      body: Center(
-        child: FrameWidget(
-          initialWidth: _width,
-          initialHeight: _height,
-          minWidth: _minWidth,
-          minHeight: _minHeight,
-          maxWidth: _maxWidth,
-          maxHeight: _maxHeight,
-          backgroundColor: _backgroundColor,
-          onSizeChanged: (width, height) {
-            setState(() {
-              _width = width;
-              _height = height;
-            });
-          },
-          child: widget.child,
+    // Fixed sizes for thumbnails
+    double thumbnailWidth = widget.kind == PixelKind.component ? 300.0 : 393.0; // iPhone 16 width for screens
+    double thumbnailHeight = widget.kind == PixelKind.component ? 200.0 : 852.0; // iPhone 16 height for screens
+    
+    // Function to open the full preview
+    void openFullPreview() {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => Scaffold(
+            appBar: AppBar(
+              title: Text(widget.kind == PixelKind.component ? 'Component Preview' : 'Screen Preview'),
+              backgroundColor: PixelTheme.primaryBlue,
+            ),
+            body: PixelPreview(
+              kind: widget.kind,
+              child: widget.child,
+              thumbnailMode: false, // Full preview mode
+            ),
+          ),
+        ),
+      );
+    }
+    
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: openFullPreview,
+        child: Container(
+          width: thumbnailWidth,
+          height: thumbnailHeight,
+          decoration: BoxDecoration(
+            color: _backgroundColor,
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: Stack(
+            children: [
+              Positioned.fill(child: widget.child),
+              // Add a transparent overlay to ensure tap events are captured
+              Positioned.fill(
+                child: Container(
+                  color: Colors.transparent,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
