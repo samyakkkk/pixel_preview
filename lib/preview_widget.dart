@@ -30,13 +30,29 @@ class _PixelPreviewState extends State<PixelPreview> {
   Color _backgroundColor = PixelTheme.lightBackground;
 
   // Size constraints
-  double _width = 500.0; // Default width up to 500px
-  double _height = 333.0; // Default 2:3 height ratio
+  late double _width;
+  late double _height;
 
   static const double _minWidth = 100;
   static const double _minHeight = 100;
   static const double _maxWidth = 2000;
   static const double _maxHeight = 2000;
+  
+  @override
+  void initState() {
+    super.initState();
+    
+    // Set default dimensions based on the kind of widget
+    if (widget.kind == PixelKind.screen) {
+      // iPhone 16 dimensions for screens
+      _width = 393.0;
+      _height = 852.0;
+    } else {
+      // Default dimensions for components
+      _width = 500.0;
+      _height = 333.0;
+    }
+  }
 
   // Sidebar state
   bool _sidebarExpanded = false;
@@ -260,29 +276,27 @@ class _PixelPreviewState extends State<PixelPreview> {
     double thumbnailWidth = widget.kind == PixelKind.component ? 300.0 : 393.0; // iPhone 16 width for screens
     double thumbnailHeight = widget.kind == PixelKind.component ? 200.0 : 852.0; // iPhone 16 height for screens
     
-    // Function to open the full preview
-    void openFullPreview() {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => Scaffold(
-            appBar: AppBar(
-              title: Text(widget.kind == PixelKind.component ? 'Component Preview' : 'Screen Preview'),
-              backgroundColor: PixelTheme.primaryBlue,
-            ),
-            body: PixelPreview(
-              kind: widget.kind,
-              child: widget.child,
-              thumbnailMode: false, // Full preview mode
-            ),
-          ),
-        ),
-      );
-    }
-    
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: openFullPreview,
+        onTap: () {
+          // Open the full preview when thumbnail is tapped
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => Scaffold(
+                appBar: AppBar(
+                  title: Text(widget.kind == PixelKind.component ? 'Component Preview' : 'Screen Preview'),
+                  backgroundColor: PixelTheme.primaryBlue,
+                ),
+                body: PixelPreview(
+                  kind: widget.kind,
+                  child: widget.child,
+                  thumbnailMode: false, // Full preview mode
+                ),
+              ),
+            ),
+          );
+        },
         child: Container(
           width: thumbnailWidth,
           height: thumbnailHeight,
