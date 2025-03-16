@@ -9,11 +9,17 @@ class PixelPreview extends StatefulWidget {
   final Widget child;
   final PixelKind kind;
   final bool enabled;
+  
+  /// When true, the sidebar with component options will be hidden.
+  /// This is useful for thumbnail displays or when embedding in a grid.
+  final bool thumbnailMode;
+  
   const PixelPreview({
     super.key,
     required this.kind,
     required this.child,
     this.enabled = !kReleaseMode,
+    this.thumbnailMode = false,
   });
 
   @override
@@ -44,6 +50,11 @@ class _PixelPreviewState extends State<PixelPreview> {
     // If preview is disabled, just return the child widget
     if (!widget.enabled) {
       return widget.child;
+    }
+    
+    // If thumbnail mode is enabled, return a simplified version without the sidebar
+    if (widget.thumbnailMode) {
+      return _buildThumbnailView();
     }
 
     // Determine if we're in a mobile view
@@ -243,6 +254,31 @@ class _PixelPreviewState extends State<PixelPreview> {
     );
   }
 
+  /// Builds a simplified view for thumbnail mode without the sidebar
+  Widget _buildThumbnailView() {
+    return Scaffold(
+      backgroundColor: PixelTheme.canvasBackground,
+      body: Center(
+        child: FrameWidget(
+          initialWidth: _width,
+          initialHeight: _height,
+          minWidth: _minWidth,
+          minHeight: _minHeight,
+          maxWidth: _maxWidth,
+          maxHeight: _maxHeight,
+          backgroundColor: _backgroundColor,
+          onSizeChanged: (width, height) {
+            setState(() {
+              _width = width;
+              _height = height;
+            });
+          },
+          child: widget.child,
+        ),
+      ),
+    );
+  }
+  
   Widget _buildScreenSidebar() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

@@ -15,6 +15,10 @@ class PixelApp extends StatefulWidget {
   /// List of screens (already wrapped in PixelPreview) to display in the Screens tab
   final List<Widget> screens;
   
+  /// Optional list of all widgets (components and screens) to display
+  /// If provided, this will be used instead of the separate components and screens lists
+  final List<Widget>? widgets;
+  
   /// Optional title for the app
   final String title;
   
@@ -35,8 +39,9 @@ class PixelApp extends StatefulWidget {
 
   const PixelApp({
     super.key,
-    required this.components,
-    required this.screens,
+    this.components = const [],
+    this.screens = const [],
+    this.widgets,
     this.title = 'Pixel Preview',
     this.theme,
     this.gridSpacing = 16.0,
@@ -71,6 +76,26 @@ class _PixelAppState extends State<PixelApp> with SingleTickerProviderStateMixin
       useMaterial3: true,
     );
 
+    // If widgets are provided, filter them by kind
+    List<Widget> componentWidgets = widget.components;
+    List<Widget> screenWidgets = widget.screens;
+
+    if (widget.widgets != null) {
+      componentWidgets = widget.widgets!.where((w) {
+        if (w is PixelPreview) {
+          return w.kind == PixelKind.component;
+        }
+        return false;
+      }).toList();
+
+      screenWidgets = widget.widgets!.where((w) {
+        if (w is PixelPreview) {
+          return w.kind == PixelKind.screen;
+        }
+        return false;
+      }).toList();
+    }
+
     return MaterialApp(
       title: widget.title,
       theme: theme,
@@ -94,8 +119,8 @@ class _PixelAppState extends State<PixelApp> with SingleTickerProviderStateMixin
         body: TabBarView(
           controller: _tabController,
           children: [
-            _buildGridView(widget.components, PixelKind.component),
-            _buildGridView(widget.screens, PixelKind.screen),
+            _buildGridView(componentWidgets, PixelKind.component),
+            _buildGridView(screenWidgets, PixelKind.screen),
           ],
         ),
       ),
@@ -142,6 +167,17 @@ class _PixelAppState extends State<PixelApp> with SingleTickerProviderStateMixin
   }
 
   Widget _buildGridItem(Widget child, PixelKind kind) {
+    // Ensure thumbnail mode is enabled for all PixelPreview widgets
+    Widget thumbnailChild = child;
+    if (child is PixelPreview && !child.thumbnailMode) {
+      thumbnailChild = PixelPreview(
+        kind: child.kind,
+        child: child.child,
+        enabled: child.enabled,
+        thumbnailMode: true, // Force thumbnail mode
+      );
+    }
+    
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
@@ -150,7 +186,7 @@ class _PixelAppState extends State<PixelApp> with SingleTickerProviderStateMixin
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
-        child: child, // Child is already wrapped in PixelPreview
+        child: thumbnailChild,
       ),
     );
   }
@@ -194,6 +230,8 @@ class _PixelAppState extends State<PixelApp> with SingleTickerProviderStateMixin
 class PixelAppBuilder {
   final List<Widget> _components = [];
   final List<Widget> _screens = [];
+  final List<Widget> _widgets = [];
+  bool _useWidgets = false;
   String _title = 'Pixel Preview';
   ThemeData? _theme;
   double _gridSpacing = 16.0;
@@ -222,6 +260,22 @@ class PixelAppBuilder {
   /// Add multiple screens (already wrapped in PixelPreview) to the Screens tab
   PixelAppBuilder addScreens(List<Widget> screens) {
     _screens.addAll(screens);
+    return this;
+  }
+  
+  /// Add a widget (already wrapped in PixelPreview) to the widgets collection
+  /// This will override the separate components and screens lists
+  PixelAppBuilder addWidget(Widget widget) {
+    _widgets.add(widget);
+    _useWidgets = true;
+    return this;
+  }
+  
+  /// Add multiple widgets (already wrapped in PixelPreview) to the widgets collection
+  /// This will override the separate components and screens lists
+  PixelAppBuilder addWidgets(List<Widget> widgets) {
+    _widgets.addAll(widgets);
+    _useWidgets = true;
     return this;
   }
 
@@ -258,8 +312,9 @@ class PixelAppBuilder {
   /// Build and return the PixelApp
   PixelApp build() {
     return PixelApp(
-      components: _components,
-      screens: _screens,
+      components: _useWidgets ? [] : _components,
+      screens: _useWidgets ? [] : _screens,
+      widgets: _useWidgets ? _widgets : null,
       title: _title,
       theme: _theme,
       gridSpacing: _gridSpacing,
