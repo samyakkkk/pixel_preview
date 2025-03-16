@@ -32,9 +32,12 @@ class _MyAppState extends State<MyApp> {
           title: 'Pixel UI Kit',
           // Using a single widgets list instead of separate components and screens lists
           widgets: [
-            // Component 1
+            // Component 1 with small size preset
             PixelPreview(
-              kind: PixelKind.component,
+              presets: ComponentPresets(
+                size: ComponentSize.small,
+                backgroundColor: Colors.white,
+              ),
               child: ResponsiveAppComponent(
                 title: 'Dashboard Card',
                 description: 'A responsive card component for dashboards.',
@@ -42,19 +45,26 @@ class _MyAppState extends State<MyApp> {
                 onTap: () {},
               ),
             ),
-            // Component 2
+            // Component 2 with medium size preset
             PixelPreview(
-              kind: PixelKind.component,
+              presets: ComponentPresets(
+                size: ComponentSize.medium,
+                backgroundColor: const Color(0xFFF5F5F5),
+              ),
               child: ResponsiveAppComponent(
                 title: 'Analytics Widget',
-                description: 'Data visualization component with responsive layout.',
+                description:
+                    'Data visualization component with responsive layout.',
                 icon: Icons.analytics,
                 onTap: () {},
               ),
             ),
-            // Component 3
+            // Component 3 with large size preset
             PixelPreview(
-              kind: PixelKind.component,
+              presets: ComponentPresets(
+                size: ComponentSize.large,
+                backgroundColor: Colors.white,
+              ),
               child: ResponsiveAppComponent(
                 title: 'User Profile',
                 description: 'User profile card with adaptive sizing.',
@@ -62,9 +72,14 @@ class _MyAppState extends State<MyApp> {
                 onTap: () {},
               ),
             ),
-            // Component 4
+            // Component 4 with custom background color
             PixelPreview(
-              kind: PixelKind.component,
+              presets: ComponentPresets(
+                size: ComponentSize.medium,
+                backgroundColor: const Color(
+                  0xFFE6F7FF,
+                ), // Light blue background
+              ),
               child: ResponsiveAppComponent(
                 title: 'Settings Panel',
                 description: 'Configuration panel with responsive layout.',
@@ -72,19 +87,22 @@ class _MyAppState extends State<MyApp> {
                 onTap: () {},
               ),
             ),
-            // Screen 1
+            // Screen 1 with iPhone 16 preset
             PixelPreview(
-              kind: PixelKind.screen,
+              presets: ScreenPresets(deviceType: DeviceType.iPhone16),
               child: ResponsiveScreen(title: "Dashboard"),
             ),
-            // Screen 2
+            // Screen 2 with iPad preset
             PixelPreview(
-              kind: PixelKind.screen,
+              presets: ScreenPresets(deviceType: DeviceType.iPad),
               child: ResponsiveScreen(title: "Analytics"),
             ),
-            // Screen 3
+            // Screen 3 with desktop preset in landscape mode
             PixelPreview(
-              kind: PixelKind.screen,
+              presets: ScreenPresets(
+                deviceType: DeviceType.desktop,
+                isLandscape: true,
+              ),
               child: ResponsiveScreen(title: "User Profile"),
             ),
           ],

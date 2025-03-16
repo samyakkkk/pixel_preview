@@ -76,21 +76,21 @@ class _PixelAppState extends State<PixelApp> with SingleTickerProviderStateMixin
       useMaterial3: true,
     );
 
-    // If widgets are provided, filter them by kind
+    // If widgets are provided, filter them by preset type
     List<Widget> componentWidgets = widget.components;
     List<Widget> screenWidgets = widget.screens;
 
     if (widget.widgets != null) {
       componentWidgets = widget.widgets!.where((w) {
         if (w is PixelPreview) {
-          return w.kind == PixelKind.component;
+          return !w.presets.isScreen; // Component presets
         }
         return false;
       }).toList();
 
       screenWidgets = widget.widgets!.where((w) {
         if (w is PixelPreview) {
-          return w.kind == PixelKind.screen;
+          return w.presets.isScreen; // Screen presets
         }
         return false;
       }).toList();
@@ -119,15 +119,15 @@ class _PixelAppState extends State<PixelApp> with SingleTickerProviderStateMixin
         body: TabBarView(
           controller: _tabController,
           children: [
-            _buildGridView(componentWidgets, PixelKind.component),
-            _buildGridView(screenWidgets, PixelKind.screen),
+            _buildGridView(componentWidgets, isScreen: false),
+            _buildGridView(screenWidgets, isScreen: true),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildGridView(List<Widget> items, PixelKind kind) {
+  Widget _buildGridView(List<Widget> items, {required bool isScreen}) {
     return LayoutBuilder(
       builder: (context, constraints) {
         // Determine the number of columns based on screen width
@@ -141,10 +141,10 @@ class _PixelAppState extends State<PixelApp> with SingleTickerProviderStateMixin
         // Fixed aspect ratio based on the thumbnail sizes
         // Component: 300 x 200 = 1.5 aspect ratio
         // Screen: 393 x 852 = 0.46 aspect ratio
-        double aspectRatio = kind == PixelKind.component ? 1.5 : 0.46;
+        double aspectRatio = isScreen ? 0.46 : 1.5;
 
         return items.isEmpty
-            ? _buildEmptyState(kind)
+            ? _buildEmptyState(isScreen)
             : Padding(
                 padding: EdgeInsets.all(widget.gridSpacing),
                 child: GridView.builder(
@@ -156,7 +156,7 @@ class _PixelAppState extends State<PixelApp> with SingleTickerProviderStateMixin
                   ),
                   itemCount: items.length,
                   itemBuilder: (context, index) {
-                    return _buildGridItem(items[index], kind);
+                    return _buildGridItem(items[index], isScreen);
                   },
                 ),
               );
@@ -164,12 +164,12 @@ class _PixelAppState extends State<PixelApp> with SingleTickerProviderStateMixin
     );
   }
 
-  Widget _buildGridItem(Widget child, PixelKind kind) {
+  Widget _buildGridItem(Widget child, bool isScreen) {
     // Ensure thumbnail mode is enabled for all PixelPreview widgets
     Widget thumbnailChild = child;
     if (child is PixelPreview && !child.thumbnailMode) {
       thumbnailChild = PixelPreview(
-        kind: child.kind,
+        presets: child.presets,
         child: child.child,
         enabled: child.enabled,
         thumbnailMode: true, // Force thumbnail mode
@@ -188,15 +188,15 @@ class _PixelAppState extends State<PixelApp> with SingleTickerProviderStateMixin
     );
   }
 
-  Widget _buildEmptyState(PixelKind kind) {
-    final String itemType = kind == PixelKind.component ? 'components' : 'screens';
+  Widget _buildEmptyState(bool isScreen) {
+    final String itemType = isScreen ? 'screens' : 'components';
     
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            kind == PixelKind.component ? Icons.widgets_outlined : Icons.phone_android_outlined,
+            isScreen ? Icons.phone_android_outlined : Icons.widgets_outlined,
             size: 64,
             color: PixelTheme.secondaryText,
           ),
