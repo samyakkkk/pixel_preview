@@ -1,7 +1,7 @@
 import 'package:example/component.dart';
 import 'package:example/screen.dart.dart';
 import 'package:flutter/material.dart';
-import 'package:pixel_preview/preview_widget.dart';
+import 'package:pixel_preview/pixel_preview.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,22 +28,53 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       home: Scaffold(
-        body:
-            component
-                ? PixelPreview(
-                  kind: PixelKind.component,
-                  child: ResponsiveAppComponent(
-                    title: 'Pixel Preview Demo',
-                    description:
-                        'A responsive component that adapts to various constraint sizes.',
-                    icon: Icons.dashboard,
-                    onTap: () {},
-                  ),
-                )
-                : PixelPreview(
-                  kind: PixelKind.screen,
-                  child: ResponsiveScreen(title: "Pixel Preview Dashboard"),
-                ),
+        body: PixelApp(
+          title: 'Pixel UI Kit',
+          components: [
+            // Component 1
+            PixelPreview(
+              kind: PixelKind.component,
+              child: ResponsiveAppComponent(
+                title: 'Dashboard Card',
+                description: 'A responsive card component for dashboards.',
+                icon: Icons.dashboard,
+                onTap: () {},
+              ),
+            ),
+            // Component 2
+            PixelPreview(
+              kind: PixelKind.component,
+              child: ResponsiveAppComponent(
+                title: 'Analytics Widget',
+                description: 'Data visualization component with responsive layout.',
+                icon: Icons.analytics,
+                onTap: () {},
+              ),
+            ),
+            // Component 3
+            PixelPreview(
+              kind: PixelKind.component,
+              child: ResponsiveAppComponent(
+                title: 'User Profile',
+                description: 'User profile card with adaptive sizing.',
+                icon: Icons.person,
+                onTap: () {},
+              ),
+            ),
+          ],
+          screens: [
+            // Screen 1
+            PixelPreview(
+              kind: PixelKind.screen,
+              child: ResponsiveScreen(title: "Dashboard"),
+            ),
+            // Screen 2
+            PixelPreview(
+              kind: PixelKind.screen,
+              child: ResponsiveScreen(title: "Analytics"),
+            ),
+          ],
+        ),
       ),
     );
   }

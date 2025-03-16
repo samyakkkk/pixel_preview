@@ -33,7 +33,7 @@ class _PixelPreviewState extends State<PixelPreview> {
   static const double _maxHeight = 2000;
 
   // Sidebar state
-  bool _sidebarExpanded = true;
+  bool _sidebarExpanded = false;
 
   // Orientation state
   bool _isLandscape = false;
