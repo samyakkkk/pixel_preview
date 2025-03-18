@@ -13,10 +13,10 @@ enum ComponentSize {
 
 /// Component size dimensions
 class ComponentSizes {
-  static const Map<ComponentSize, Map<String, double>> dimensions = {
-    ComponentSize.small: {'width': 300.0, 'height': 200.0},
-    ComponentSize.medium: {'width': 450.0, 'height': 300.0},
-    ComponentSize.large: {'width': 750.0, 'height': 500.0},
+  static Map<ComponentSize, Size> dimensions = {
+    ComponentSize.small: const Size(300.0, 300.0),
+    ComponentSize.medium: const Size(450.0, 450.0),
+    ComponentSize.large: const Size(750.0, 750.0),
   };
 }
 
@@ -35,33 +35,27 @@ class DeviceDimensions {
   static const Map<DeviceType, Map<String, dynamic>> dimensions = {
     DeviceType.iPhoneSE: {
       'name': 'iPhone SE',
-      'width': 375.0,
-      'height': 667.0,
+      'size': Size(375.0, 667.0),
     },
     DeviceType.iPhone16: {
       'name': 'iPhone 16',
-      'width': 393.0,
-      'height': 852.0,
+      'size': Size(393.0, 852.0),
     },
     DeviceType.iPhone16ProMax: {
       'name': 'iPhone 16 Pro Max',
-      'width': 440.0,
-      'height': 956.0,
+      'size': Size(440.0, 956.0),
     },
     DeviceType.samsungGalaxyS25: {
       'name': 'Samsung Galaxy S25',
-      'width': 415.0,
-      'height': 900.0,
+      'size': Size(415.0, 900.0),
     },
     DeviceType.iPad: {
       'name': 'iPad',
-      'width': 768.0,
-      'height': 1024.0,
+      'size': Size(768.0, 1024.0),
     },
     DeviceType.desktop: {
       'name': 'Desktop',
-      'width': 1440.0,
-      'height': 960.0,
+      'size': Size(1440.0, 960.0),
     },
   };
 }
@@ -101,10 +95,10 @@ class ComponentPresets extends Presets {
   bool get isScreen => false;
 
   @override
-  double get initialWidth => ComponentSizes.dimensions[size]!['width']!;
+  double get initialWidth => ComponentSizes.dimensions[size]!.width;
 
   @override
-  double get initialHeight => ComponentSizes.dimensions[size]!['height']!;
+  double get initialHeight => ComponentSizes.dimensions[size]!.height;
 }
 
 /// Preset configuration for screen previews
@@ -126,13 +120,15 @@ class ScreenPresets extends Presets {
   @override
   double get initialWidth {
     final dimensions = DeviceDimensions.dimensions[deviceType]!;
-    return isLandscape ? dimensions['height'] : dimensions['width'];
+    final size = dimensions['size'] as Size;
+    return isLandscape ? size.height : size.width;
   }
 
   @override
   double get initialHeight {
     final dimensions = DeviceDimensions.dimensions[deviceType]!;
-    return isLandscape ? dimensions['width'] : dimensions['height'];
+    final size = dimensions['size'] as Size;
+    return isLandscape ? size.width : size.height;
   }
 
   /// Get the device name
@@ -429,17 +425,6 @@ class _PixelPreviewState extends State<PixelPreview> {
 
   /// Builds a simplified view for thumbnail mode without the sidebar
   Widget _buildThumbnailView() {
-    late final double thumbnailWidth;
-    late final double thumbnailHeight;
-
-    if (widget.presets.isScreen) {
-      thumbnailWidth = 393.0;
-      thumbnailHeight = 852.0;
-    } else {
-      thumbnailWidth = 300.0;
-      thumbnailHeight = 200.0;
-    }
-
     // Use actual widget size for rendering
     double renderWidth = widget.presets.initialWidth;
     double renderHeight = widget.presets.initialHeight;
@@ -483,23 +468,13 @@ class _PixelPreviewState extends State<PixelPreview> {
 
         // Device selection buttons
         Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            // Latest iPhone models (2024-2025) - 3 varying sizes
-            _buildDeviceButton('iPhone SE', 375, 667),
-            _buildDeviceButton('iPhone 16', 393, 852),
-            _buildDeviceButton('iPhone 16 Pro Max', 440, 956),
-
-            // // Other devices
-            // _buildDeviceButton('Pixel 4', 393, 851),
-            // _buildDeviceButton('Pixel 9 Pro XL', 443, 985),
-            // _buildDeviceButton('Pixel 9', 410, 919),
-            _buildDeviceButton('Samsung Galaxy S25', 415, 900),
-            _buildDeviceButton('iPad', 768, 1024),
-            _buildDeviceButton('Desktop', 1440, 960),
-          ],
-        ),
+            spacing: 8,
+            runSpacing: 8,
+            children: DeviceDimensions.dimensions.keys.map((key) {
+              return _buildDeviceButton(
+                  DeviceDimensions.dimensions[key]!['name'],
+                  DeviceDimensions.dimensions[key]!['size']);
+            }).toList()),
 
         // Only show orientation toggle for phones and tablets, not desktop
         if (_currentDevice != '' && _currentDevice != 'Desktop')
@@ -581,11 +556,13 @@ class _PixelPreviewState extends State<PixelPreview> {
   }
 
   // Helper method to build device selection buttons
-  Widget _buildDeviceButton(String label, int width, int height) {
+  Widget _buildDeviceButton(String label, Size size) {
+    double width = size.width;
+    double height = size.height;
     // Check if dimensions match in either orientation
     bool isSelected =
-        (_width == width.toDouble() && _height == height.toDouble()) ||
-            (_width == height.toDouble() &&
+        (_width == width && _height == height) ||
+            (_width == height &&
                 _height == width.toDouble() &&
                 _isLandscape);
 
@@ -648,8 +625,8 @@ class _PixelPreviewState extends State<PixelPreview> {
   Widget _buildSizeButton(ComponentSize size) {
     // Get the dimensions for this size
     final dimensions = ComponentSizes.dimensions[size]!;
-    final width = dimensions['width']!;
-    final height = dimensions['height']!;
+    final width = dimensions.width;
+    final height = dimensions.height;
 
     // Check if this size is currently selected (approximately)
     bool isSelected =
