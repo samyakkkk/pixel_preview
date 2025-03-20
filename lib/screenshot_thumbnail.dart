@@ -17,10 +17,10 @@ class ScreenshotThumbnail extends StatefulWidget {
   /// The height of the widget when rendered for screenshot
   final double renderHeight;
 
-  /// The width of the displayed thumbnail
+  /// The width of the displayed thumbnail (from parent constraints)
   final double thumbnailWidth;
 
-  /// The height of the displayed thumbnail
+  /// The height of the displayed thumbnail (from parent constraints)
   final double thumbnailHeight;
 
   /// Callback when the thumbnail is tapped
@@ -44,7 +44,7 @@ class ScreenshotThumbnail extends StatefulWidget {
 class _ScreenshotThumbnailState extends State<ScreenshotThumbnail> {
   ui.Image? _screenshot;
   bool _isCapturing = false;
-  bool _showFabric = true;
+  bool _needsRecapture = true; // Renamed from _showFabric for clarity
   int key = 0;
 
   @override
@@ -57,19 +57,21 @@ class _ScreenshotThumbnailState extends State<ScreenshotThumbnail> {
     setState(() {
       _screenshot = image;
       _isCapturing = false;
-      _showFabric =
-          false; // Remove the fabric from the tree once we have the screenshot
+      _needsRecapture = false; // Screenshot is fresh, no need to recapture
     });
   }
+
   @override
   void didUpdateWidget(covariant ScreenshotThumbnail oldWidget) {
-    if (oldWidget.thumbnailHeight != widget.thumbnailHeight || oldWidget.thumbnailWidth != widget.thumbnailWidth) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.thumbnailHeight != widget.thumbnailHeight ||
+        oldWidget.thumbnailWidth != widget.thumbnailWidth) {
+      // Parent size changed, so we need to recapture
       setState(() {
-        _showFabric = true;
-        key++;
+        _needsRecapture = true;
+        key++; // Force rebuild of ScrollableFabric to trigger recapture
       });
     }
-    super.didUpdateWidget(oldWidget);
   }
 
   // Callback for when screenshot capture starts
@@ -90,8 +92,8 @@ class _ScreenshotThumbnailState extends State<ScreenshotThumbnail> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Only show the fabric when needed
-        if (_showFabric)
+        // Only include the ScrollableFabric when we need to recapture
+        if (_needsRecapture)
           ScrollableFabric(
             key: ValueKey('scrollable_fabric_$key'),
             widget: widget,
@@ -99,7 +101,6 @@ class _ScreenshotThumbnailState extends State<ScreenshotThumbnail> {
             onCaptureStarted: _onCaptureStarted,
             onCaptureFailed: _onCaptureFailed,
           ),
-        // if (!_showFabric)
         InkWell(
           onTap: widget.onTap,
           child: Container(
@@ -107,14 +108,17 @@ class _ScreenshotThumbnailState extends State<ScreenshotThumbnail> {
             color: widget.backgroundColor,
             child: _isCapturing || _screenshot == null
                 ?
-                // Show loading indicator while capturing
+                // Show loading indicator while capturing or no screenshot yet
                 const Center(
                     child: CircularProgressIndicator(),
                   )
                 : Center(
-                    child: RawImage(
-                      image: _screenshot,
-                      fit: BoxFit.cover,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: RawImage(
+                        image: _screenshot,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
           ),
@@ -149,7 +153,7 @@ class _ScrollableFabricState extends State<ScrollableFabric> {
   @override
   void initState() {
     super.initState();
-    // Schedule the screenshot capture after the first frame is rendered
+    // Capture the screenshot when the widget is first built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _captureScreenshot();
     });
@@ -188,9 +192,9 @@ class _ScrollableFabricState extends State<ScrollableFabric> {
           height: widget.widget.renderHeight,
           child: Center(
             child: RepaintBoundary(
-            key: _repaintBoundaryKey,
-            child: widget.widget.child,
-          )
+              key: _repaintBoundaryKey,
+              child: widget.widget.child,
+            ),
           ),
         ),
       ),
@@ -222,8 +226,6 @@ class ScreenshotThumbnailBuilder extends StatelessWidget {
     required this.backgroundColor,
     required this.renderWidth,
     required this.renderHeight,
-    // required this.thumbnailWidth,
-    // required this.thumbnailHeight,
     this.onTap,
   });
 
@@ -232,16 +234,15 @@ class ScreenshotThumbnailBuilder extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         return ScreenshotThumbnail(
-            backgroundColor: backgroundColor,
-            renderWidth: renderWidth,
-            renderHeight: renderHeight,
-            thumbnailWidth: constraints.maxWidth,
-            thumbnailHeight: constraints.maxHeight,
-            onTap: onTap,
-            child: child,
-        
+          backgroundColor: backgroundColor,
+          renderWidth: renderWidth,
+          renderHeight: renderHeight,
+          thumbnailWidth: constraints.maxWidth,
+          thumbnailHeight: constraints.maxHeight,
+          onTap: onTap,
+          child: child,
         );
-      }
+      },
     );
   }
 }

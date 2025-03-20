@@ -28,14 +28,37 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       home: Scaffold(
-        body: PixelApp(
+        body: true? 
+        
+        // PixelPreview(
+        //       key: ValueKey("USER PROFILE"),
+        //       presets: ScreenPresets(
+        //         deviceType: DeviceType.desktop,
+        //         isLandscape: true,
+        //       ),
+        //       child: ResponsiveScreen(title: "User Profile"),
+        //     )
+        
+          PixelPreview(
+              presets: ComponentPresets(
+                size: Size(500, 250),
+                backgroundColor: Colors.white,
+              ),
+              child: ResponsiveAppComponent(
+                title: 'Dashboard Card',
+                description: 'A responsive card component for dashboards.',
+                icon: Icons.dashboard,
+                onTap: () {},
+              ),
+            )
+            : PixelApp(
           title: 'Pixel UI Kit',
           // Using a single widgets list instead of separate components and screens lists
           widgets: [
             // Component 1 with small size preset
             PixelPreview(
               presets: ComponentPresets(
-                size: ComponentSize.small,
+                size: ComponentSizes.small,
                 backgroundColor: Colors.white,
               ),
               child: ResponsiveAppComponent(
@@ -48,7 +71,7 @@ class _MyAppState extends State<MyApp> {
             // Component 2 with medium size preset
             PixelPreview(
               presets: ComponentPresets(
-                size: ComponentSize.medium,
+                size: ComponentSizes.medium,
                 backgroundColor: const Color(0xFFF5F5F5),
               ),
               child: ResponsiveAppComponent(
@@ -62,7 +85,7 @@ class _MyAppState extends State<MyApp> {
             // Component 3 with large size preset
             PixelPreview(
               presets: ComponentPresets(
-                size: ComponentSize.large,
+                size: ComponentSizes.large,
                 backgroundColor: Colors.white,
               ),
               child: ResponsiveAppComponent(
@@ -75,7 +98,7 @@ class _MyAppState extends State<MyApp> {
             // Component 4 with custom background color
             PixelPreview(
               presets: ComponentPresets(
-                size: ComponentSize.medium,
+                size: ComponentSizes.medium,
                 backgroundColor: const Color(
                   0xFFE6F7FF,
                 ), // Light blue background

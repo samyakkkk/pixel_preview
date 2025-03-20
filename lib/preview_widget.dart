@@ -4,20 +4,12 @@ import 'package:pixel_preview/frame_widget.dart';
 import 'package:pixel_preview/pixel_theme.dart';
 import 'package:pixel_preview/screenshot_thumbnail.dart';
 
-/// Predefined component sizes
-enum ComponentSize {
-  small,
-  medium,
-  large,
-}
-
 /// Component size dimensions
 class ComponentSizes {
-  static Map<ComponentSize, Size> dimensions = {
-    ComponentSize.small: const Size(300.0, 300.0),
-    ComponentSize.medium: const Size(450.0, 450.0),
-    ComponentSize.large: const Size(750.0, 750.0),
-  };
+  // Predefined sizes
+  static const Size small = Size(300.0, 300.0);
+  static const Size medium = Size(450.0, 450.0);
+  static const Size large = Size(750.0, 750.0);
 }
 
 /// Available device types for screen previews
@@ -79,15 +71,15 @@ abstract class Presets {
 
 /// Preset configuration for component previews
 class ComponentPresets extends Presets {
-  /// Initial size of the component
-  final ComponentSize size;
+  /// Size of the component
+  final Size size;
 
   /// Initial background color
   @override
   final Color backgroundColor;
 
   const ComponentPresets({
-    this.size = ComponentSize.medium,
+    this.size = ComponentSizes.medium,
     this.backgroundColor = Colors.white,
   });
 
@@ -95,10 +87,10 @@ class ComponentPresets extends Presets {
   bool get isScreen => false;
 
   @override
-  double get initialWidth => ComponentSizes.dimensions[size]!.width;
+  double get initialWidth => size.width;
 
   @override
-  double get initialHeight => ComponentSizes.dimensions[size]!.height;
+  double get initialHeight => size.height;
 }
 
 /// Preset configuration for screen previews
@@ -187,10 +179,14 @@ class _PixelPreviewState extends State<PixelPreview> {
       _isLandscape = screenPresets.isLandscape;
       _currentDevice = screenPresets.deviceName;
     }
+
+    if (widget.thumbnailMode){
+      _sidebarExpanded = false;
+    }
   }
 
   // Sidebar state
-  bool _sidebarExpanded = false;
+  bool _sidebarExpanded = true;
 
   // Orientation state
   bool _isLandscape = false;
@@ -335,6 +331,8 @@ class _PixelPreviewState extends State<PixelPreview> {
     );
   }
 
+
+
   Widget _buildComponentSidebar() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -346,10 +344,11 @@ class _PixelPreviewState extends State<PixelPreview> {
         // Size preset buttons
         Wrap(
           spacing: 8,
+          runSpacing: 8,
           children: [
-            _buildSizeButton(ComponentSize.small),
-            _buildSizeButton(ComponentSize.medium),
-            _buildSizeButton(ComponentSize.large),
+            _buildSizeButton(ComponentSizes.small, 'Small'),
+            _buildSizeButton(ComponentSizes.medium, 'Medium'),
+            _buildSizeButton(ComponentSizes.large, 'Large'),
           ],
         ),
 
@@ -624,29 +623,13 @@ class _PixelPreviewState extends State<PixelPreview> {
   }
 
   // Helper to build a component size button
-  Widget _buildSizeButton(ComponentSize size) {
-    // Get the dimensions for this size
-    final dimensions = ComponentSizes.dimensions[size]!;
-    final width = dimensions.width;
-    final height = dimensions.height;
+  Widget _buildSizeButton(Size size, String label) {
+    final width = size.width;
+    final height = size.height;
 
     // Check if this size is currently selected (approximately)
     bool isSelected =
         (_width - width).abs() < 10 && (_height - height).abs() < 10;
-
-    // Get label for the button
-    String label;
-    switch (size) {
-      case ComponentSize.small:
-        label = 'S (${width.toInt()}×${height.toInt()})';
-        break;
-      case ComponentSize.medium:
-        label = 'M (${width.toInt()}×${height.toInt()})';
-        break;
-      case ComponentSize.large:
-        label = 'L (${width.toInt()}×${height.toInt()})';
-        break;
-    }
 
     return InkWell(
       onTap: () {
@@ -667,14 +650,15 @@ class _PixelPreviewState extends State<PixelPreview> {
             width: 1,
           ),
         ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color:
-                isSelected ? PixelTheme.primaryBlue : PixelTheme.secondaryText,
-            fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
-          ),
-        ),
+        child:Text(
+              label,
+              style: TextStyle(
+                color: isSelected
+                    ? PixelTheme.primaryBlue
+                    : PixelTheme.secondaryText,
+                fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
+              ),
+            ),
       ),
     );
   }

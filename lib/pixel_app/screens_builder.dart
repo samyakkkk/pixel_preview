@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pixel_preview/pixel_app/common_widgets.dart';
 import 'package:pixel_preview/pixel_theme.dart';
 import 'package:pixel_preview/preview_widget.dart';
-import 'package:pixel_preview/pixel_app/components_builder.dart';
-import 'package:pixel_preview/pixel_app/common_widgets.dart';
 
 class ScreensBuilder extends StatefulWidget {
   final List<PixelPreview> screens;
@@ -18,7 +17,7 @@ class _ScreensBuilderState extends State<ScreensBuilder> {
   DeviceType _selectedDeviceFilter = DeviceType.iPad;
 
   // Map to store screens by device type
-  Map<DeviceType, List<PixelPreview>> _screensByDeviceType = {};
+  final Map<DeviceType, List<PixelPreview>> _screensByDeviceType = {};
   List<DeviceType> _uniqueDeviceTypes = [];
   List<PixelPreview> _displayScreens = [];
 
@@ -161,7 +160,6 @@ class _ScreensBuilderState extends State<ScreensBuilder> {
                               ),
                               itemCount: _displayScreens.length,
                               itemBuilder: (context, index) {
-                                print("building widget ${_displayScreens[index].presets.initialWidth}");
                                 return GridItem(child: _displayScreens[index]);
                               },
                             ),
