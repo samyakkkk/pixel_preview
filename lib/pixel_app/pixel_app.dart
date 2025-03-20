@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pixel_preview/preview_widget.dart';
 import 'package:pixel_preview/pixel_theme.dart';
 import 'package:pixel_preview/pixel_app/components_builder.dart';
-import 'package:pixel_preview/pixel_app/screens_builder.dart';
 
 /// A widget that displays a collection of PixelPreview components and screens in a grid layout.
 ///
@@ -80,13 +79,13 @@ class _PixelAppState extends State<PixelApp>
       return false;
     }).toList());
 
-    List<PixelPreview> screenWidgets =
-        List<PixelPreview>.from(widget.widgets.where((w) {
-      if (w is PixelPreview) {
-        return w.presets.isScreen; // Screen presets
-      }
-      return false;
-    }).toList());
+    // List<PixelPreview> screenWidgets =
+    //     List<PixelPreview>.from(widget.widgets.where((w) {
+    //   if (w is PixelPreview) {
+    //     return w.presets.isScreen; // Screen presets
+    //   }
+    //   return false;
+    // }).toList());
 
     return MaterialApp(
       title: widget.title,

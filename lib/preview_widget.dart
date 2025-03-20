@@ -4,6 +4,14 @@ import 'package:pixel_preview/frame_widget.dart';
 import 'package:pixel_preview/pixel_theme.dart';
 import 'package:pixel_preview/screenshot_thumbnail.dart';
 
+/// Preview type for backward compatibility
+@Deprecated(
+    'Use presets parameter instead of kind for more customization options')
+enum PixelKind {
+  component,
+  screen,
+}
+
 /// Component size dimensions
 class ComponentSizes {
   // Predefined sizes
@@ -138,16 +146,31 @@ class PixelPreview extends StatefulWidget {
   /// Preset configuration for this preview
   /// The type of preset (ComponentPresets or ScreenPresets) determines
   /// whether this is a component or screen preview
-  final Presets presets;
+  late final Presets presets;
 
-  const PixelPreview({
+  /// Creates a PixelPreview widget.
+  ///
+  /// You can use either the new `presets` parameter or the deprecated `kind` parameter.
+  /// Using `presets` provides more customization options.
+  PixelPreview({
     super.key,
     required this.child,
-    required this.presets,
+    Presets? presets,
+    PixelKind? kind,
     this.enabled = !kReleaseMode,
     this.thumbnailMode = false,
-  });
-
+  }) : assert(presets != null || kind != null,
+            'Either presets or kind must be provided. Using presets is recommended as kind is deprecated.') {
+    if (presets != null) {
+      this.presets = presets;
+    } else if (kind != null) {
+      if (kind == PixelKind.component) {
+        this.presets = ComponentPresets();
+      } else {
+        this.presets = ScreenPresets();
+      }
+    }
+  }
   @override
   State<PixelPreview> createState() => _PixelPreviewState();
 }
