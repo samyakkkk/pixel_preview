@@ -17,11 +17,11 @@ class ScreenshotThumbnail extends StatefulWidget {
   /// The height of the widget when rendered for screenshot
   final double renderHeight;
 
-  // /// The width of the displayed thumbnail
-  // final double thumbnailWidth;
+  /// The width of the displayed thumbnail
+  final double thumbnailWidth;
 
-  // /// The height of the displayed thumbnail
-  // final double thumbnailHeight;
+  /// The height of the displayed thumbnail
+  final double thumbnailHeight;
 
   /// Callback when the thumbnail is tapped
   final VoidCallback? onTap;
@@ -32,8 +32,8 @@ class ScreenshotThumbnail extends StatefulWidget {
     required this.backgroundColor,
     required this.renderWidth,
     required this.renderHeight,
-    // required this.thumbnailWidth,
-    // required this.thumbnailHeight,
+    required this.thumbnailWidth,
+    required this.thumbnailHeight,
     this.onTap,
   });
 
@@ -45,6 +45,7 @@ class _ScreenshotThumbnailState extends State<ScreenshotThumbnail> {
   ui.Image? _screenshot;
   bool _isCapturing = false;
   bool _showFabric = true;
+  int key = 0;
 
   @override
   void initState() {
@@ -59,6 +60,16 @@ class _ScreenshotThumbnailState extends State<ScreenshotThumbnail> {
       _showFabric =
           false; // Remove the fabric from the tree once we have the screenshot
     });
+  }
+  @override
+  void didUpdateWidget(covariant ScreenshotThumbnail oldWidget) {
+    if (oldWidget.thumbnailHeight != widget.thumbnailHeight || oldWidget.thumbnailWidth != widget.thumbnailWidth) {
+      setState(() {
+        _showFabric = true;
+        key++;
+      });
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   // Callback for when screenshot capture starts
@@ -82,6 +93,7 @@ class _ScreenshotThumbnailState extends State<ScreenshotThumbnail> {
         // Only show the fabric when needed
         if (_showFabric)
           ScrollableFabric(
+            key: ValueKey('scrollable_fabric_$key'),
             widget: widget,
             onScreenshotAvailable: _onScreenshotAvailable,
             onCaptureStarted: _onCaptureStarted,
@@ -201,12 +213,6 @@ class ScreenshotThumbnailBuilder extends StatelessWidget {
   /// The height of the widget when rendered for screenshot
   final double renderHeight;
 
-  // /// The width of the displayed thumbnail
-  // final double thumbnailWidth;
-
-  // /// The height of the displayed thumbnail
-  // final double thumbnailHeight;
-
   /// Callback when the thumbnail is tapped
   final VoidCallback? onTap;
 
@@ -223,15 +229,19 @@ class ScreenshotThumbnailBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenshotThumbnail(
-        backgroundColor: backgroundColor,
-        renderWidth: renderWidth,
-        renderHeight: renderHeight,
-        // thumbnailWidth: thumbnailWidth,
-        // thumbnailHeight: thumbnailHeight,
-        onTap: onTap,
-        child: child,
-    
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return ScreenshotThumbnail(
+            backgroundColor: backgroundColor,
+            renderWidth: renderWidth,
+            renderHeight: renderHeight,
+            thumbnailWidth: constraints.maxWidth,
+            thumbnailHeight: constraints.maxHeight,
+            onTap: onTap,
+            child: child,
+        
+        );
+      }
     );
   }
 }

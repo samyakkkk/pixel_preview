@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pixel_preview/pixel_theme.dart';
 import 'package:pixel_preview/preview_widget.dart';
-import 'package:pixel_preview/utils/pixel_app/components_builder.dart';
-import 'package:pixel_preview/utils/pixel_app/common_widgets.dart';
+import 'package:pixel_preview/pixel_app/components_builder.dart';
+import 'package:pixel_preview/pixel_app/common_widgets.dart';
 
 class ScreensBuilder extends StatefulWidget {
   final List<PixelPreview> screens;
@@ -15,25 +15,72 @@ class ScreensBuilder extends StatefulWidget {
 
 class _ScreensBuilderState extends State<ScreensBuilder> {
   // Device filter state
-  DeviceType? _selectedDeviceFilter;
+  DeviceType _selectedDeviceFilter = DeviceType.iPad;
+
+  // Map to store screens by device type
+  Map<DeviceType, List<PixelPreview>> _screensByDeviceType = {};
+  List<DeviceType> _uniqueDeviceTypes = [];
+  List<PixelPreview> _displayScreens = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _processScreens();
+  }
+
+  @override
+  void didUpdateWidget(ScreensBuilder oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.screens != widget.screens) {
+      _processScreens();
+    }
+  }
+
+  // Process screens and organize them by device type
+  void _processScreens() {
+    _screensByDeviceType.clear();
+
+    // Get all unique device types and organize screens by device type
+    final Set<DeviceType> deviceTypesSet = {};
+
+    for (final screen in widget.screens) {
+      final deviceType = _getDeviceType(screen);
+      if (deviceType != null) {
+        deviceTypesSet.add(deviceType);
+
+        // Add screen to the appropriate list in the map
+        if (!_screensByDeviceType.containsKey(deviceType)) {
+          _screensByDeviceType[deviceType] = [];
+        }
+        _screensByDeviceType[deviceType]!.add(screen);
+      }
+    }
+
+    // Set default device filter if not set and we have items
+    if (_uniqueDeviceTypes.isNotEmpty) {
+      // Default to iPhone16 if available, otherwise use the first device type
+      if (deviceTypesSet.contains(DeviceType.iPhone16)) {
+        _selectedDeviceFilter = DeviceType.iPhone16;
+      } else if (deviceTypesSet.isNotEmpty) {
+        _selectedDeviceFilter = deviceTypesSet.first;
+      }
+    }
+
+    _uniqueDeviceTypes = deviceTypesSet.toList();
+    _displayScreens = _screensByDeviceType[_selectedDeviceFilter]!;
+
+    // Ensure the widget rebuilds with the new data
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        // For screens, add device type filtering
-        final uniqueDeviceTypes = _getUniqueDeviceTypes(widget.screens);
-        final filteredItems =
-            _filterScreensByDeviceType(widget.screens, _selectedDeviceFilter);
-
-        // Set default device filter if not set and we have items
-        if (_selectedDeviceFilter == null && uniqueDeviceTypes.isNotEmpty) {
-          // Default to iPhone16 if available, otherwise use the first device type
-          _selectedDeviceFilter =
-              uniqueDeviceTypes.contains(DeviceType.iPhone16)
-                  ? DeviceType.iPhone16
-                  : uniqueDeviceTypes.first;
-        }
-
+        // Get filtered items based on selected device type
+       
         // Determine columns based on selected device type
         int columns = _getColumnsForDeviceType(
             _selectedDeviceFilter, constraints.maxWidth);
@@ -47,8 +94,7 @@ class _ScreensBuilderState extends State<ScreensBuilder> {
         } else if (_selectedDeviceFilter == DeviceType.iPad) {
           aspectRatio = 0.75; // iPad has more square aspect ratio
         }
-        print("filtered screens :${filteredItems.length}");
-
+        print("currently displaying screens ${_displayScreens.length}");
         return widget.screens.isEmpty
             ? EmptyState(isScreen: true)
             : Column(
@@ -61,7 +107,7 @@ class _ScreensBuilderState extends State<ScreensBuilder> {
                     child: Wrap(
                       spacing: 8,
                       runSpacing: 8,
-                      children: uniqueDeviceTypes.map((deviceType) {
+                      children: _uniqueDeviceTypes.map((deviceType) {
                         final deviceInfo =
                             DeviceDimensions.dimensions[deviceType]!;
                         final deviceName = deviceInfo['name'] as String;
@@ -72,7 +118,8 @@ class _ScreensBuilderState extends State<ScreensBuilder> {
                           onSelected: (selected) {
                             setState(() {
                               _selectedDeviceFilter =
-                                  selected ? deviceType : null;
+                                  selected ? deviceType : _selectedDeviceFilter;
+                              _displayScreens = _screensByDeviceType[_selectedDeviceFilter]!;
                             });
                           },
                           selectedColor: PixelTheme.lightBlue.withOpacity(0.3),
@@ -94,7 +141,7 @@ class _ScreensBuilderState extends State<ScreensBuilder> {
                   Expanded(
                     child: Padding(
                       padding: EdgeInsets.all(widget.gridSpacing),
-                      child: filteredItems.isEmpty
+                      child: _displayScreens.isEmpty
                           ? Center(
                               child: Text(
                                 'No screens found for ${DeviceDimensions.dimensions[_selectedDeviceFilter]?["name"] ?? "selected device"}',
@@ -112,9 +159,10 @@ class _ScreensBuilderState extends State<ScreensBuilder> {
                                 mainAxisSpacing: widget.gridSpacing,
                                 childAspectRatio: aspectRatio,
                               ),
-                              itemCount: filteredItems.length,
+                              itemCount: _displayScreens.length,
                               itemBuilder: (context, index) {
-                                return GridItem(child: filteredItems[index]);
+                                print("building widget ${_displayScreens[index].presets.initialWidth}");
+                                return GridItem(child: _displayScreens[index]);
                               },
                             ),
                     ),
@@ -133,37 +181,8 @@ class _ScreensBuilderState extends State<ScreensBuilder> {
     return null;
   }
 
-  // Get all unique device types used in the screens
-  List<DeviceType> _getUniqueDeviceTypes(List<Widget> screens) {
-    final deviceTypes = <DeviceType>{};
-
-    for (final screen in screens) {
-      final deviceType = _getDeviceType(screen);
-      if (deviceType != null) {
-        deviceTypes.add(deviceType);
-      }
-    }
-
-    // Always include iPhone16 as default if available
-    if (deviceTypes.isNotEmpty && !deviceTypes.contains(DeviceType.iPhone16)) {
-      deviceTypes.add(DeviceType.iPhone16);
-    }
-
-    return deviceTypes.toList();
-  }
-
-  // Filter screens by device type
-  List<PixelPreview> _filterScreensByDeviceType(
-      List<Widget> screens, DeviceType? deviceType) {
-    if (deviceType == null) {
-      return List<PixelPreview>.from(screens);
-    }
-
-    return List<PixelPreview>.from(screens.where((screen) {
-      final screenDeviceType = _getDeviceType(screen);
-      return screenDeviceType == deviceType;
-    }).toList());
-  }
+  // These methods are no longer needed as the filtering is done in initState
+  // and the results are stored in _screensByDeviceType map
 
   // Get appropriate number of columns based on device type
   int _getColumnsForDeviceType(DeviceType? deviceType, double screenWidth) {

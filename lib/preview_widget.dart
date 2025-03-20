@@ -430,6 +430,7 @@ class _PixelPreviewState extends State<PixelPreview> {
     double renderHeight = widget.presets.initialHeight;
 
     return ScreenshotThumbnailBuilder(
+      key: widget.key,
       backgroundColor: _backgroundColor,
       renderWidth: renderWidth,
       renderHeight: renderHeight,
@@ -447,6 +448,7 @@ class _PixelPreviewState extends State<PixelPreview> {
                 backgroundColor: PixelTheme.primaryBlue,
               ),
               body: PixelPreview(
+                key: widget.key,
                 presets: widget.presets,
                 thumbnailMode: false,
                 child: widget.child, // Full preview mode

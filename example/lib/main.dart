@@ -90,21 +90,31 @@ class _MyAppState extends State<MyApp> {
             // Screen 1 with iPhone 16 preset
             PixelPreview(
               presets: ScreenPresets(deviceType: DeviceType.iPhone16),
-              child: ResponsiveScreen(title: "Dashboard"),
+              child: ResponsiveScreen(title: "Dashboard", key: ValueKey("DASHBOARD"),),
             ),
             // Screen 2 with iPad preset
             PixelPreview(
+              key: ValueKey("ANALYTICS"),
               presets: ScreenPresets(deviceType: DeviceType.iPad),
               child: ResponsiveScreen(title: "Analytics"),
             ),
             // Screen 3 with desktop preset in landscape mode
             PixelPreview(
+              key: ValueKey("USER PROFILE"),
               presets: ScreenPresets(
                 deviceType: DeviceType.desktop,
                 isLandscape: true,
               ),
               child: ResponsiveScreen(title: "User Profile"),
             ),
+            // PixelPreview(
+            //   key: ValueKey('MY HOME PAGE'),
+            //   presets: ScreenPresets(
+            //     deviceType: DeviceType.desktop,
+            //     isLandscape: true,
+            //   ),
+            //   child: MyHomePage(title: 'Test',),
+            // ),
           ],
           // Customize grid layout
           gridSpacing: 20.0,
