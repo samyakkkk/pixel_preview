@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:example/component.dart';
+import 'package:example/widgets/component.dart';
 
 /// A responsive screen that adapts to various screen sizes.
 class ResponsiveScreen extends StatefulWidget {

@@ -1,21 +1,76 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:pixel_preview/frame_widget.dart';
-import 'package:pixel_preview/pixel_theme.dart';
+import 'package:pixel_preview/pixel_preview/frame_widget.dart';
+import 'package:pixel_preview/pixel_preview/screenshot_thumbnail.dart';
+import 'package:pixel_preview/utils/pixel_theme.dart';
+import 'package:pixel_preview/utils/presets.dart';
+import 'package:pixel_preview/utils/sizes.dart';
 
-enum PixelKind { component, screen }
+/// Preview type for backward compatibility
+@Deprecated(
+    'Use presets parameter instead of kind for more customization options')
+enum PixelKind {
+  component,
+  screen,
+}
+
+/// Component size dimensions
+class ComponentSizes {
+  // Predefined sizes
+  static const Size small = Size(300.0, 300.0);
+  static const Size medium = Size(450.0, 450.0);
+  static const Size large = Size(750.0, 750.0);
+}
+
+/// Available device types for screen previews
+enum DeviceType {
+  iPhoneSE,
+  iPhone16,
+  iPhone16ProMax,
+  samsungGalaxyS25,
+  iPad,
+  desktop,
+}
 
 class PixelPreview extends StatefulWidget {
+  /// Your widget to view preview of.
   final Widget child;
-  final PixelKind kind;
-  final bool enabled;
-  const PixelPreview({
-    super.key,
-    required this.kind,
-    required this.child,
-    this.enabled = !kReleaseMode,
-  });
 
+  /// If disabled, will just display the widget itself. Disabled by default in release mode.
+  final bool enabled;
+
+  /// When true, the sidebar with component options will be hidden.
+  /// This is useful for thumbnail displays or when embedding in a grid.
+  final bool thumbnailMode;
+
+  /// Preset configuration for this preview
+  /// The type of preset (ComponentPresets or ScreenPresets) determines
+  /// whether this is a component or screen preview
+  late final Presets presets;
+
+  /// Creates a PixelPreview widget.
+  ///
+  /// The type of preset [ComponentPresets] or [ScreenPresets] determines
+  /// whether this is a component or screen preview
+  PixelPreview({
+    super.key,
+    required this.child,
+    Presets? presets,
+    PixelKind? kind,
+    this.enabled = !kReleaseMode,
+    this.thumbnailMode = false,
+  }) : assert(presets != null || kind != null,
+            'Either presets or kind must be provided. Using presets is recommended as kind is deprecated.') {
+    if (presets != null) {
+      this.presets = presets;
+    } else if (kind != null) {
+      if (kind == PixelKind.component) {
+        this.presets = ComponentPresets();
+      } else {
+        this.presets = ScreenPresets();
+      }
+    }
+  }
   @override
   State<PixelPreview> createState() => _PixelPreviewState();
 }
@@ -24,13 +79,34 @@ class _PixelPreviewState extends State<PixelPreview> {
   Color _backgroundColor = PixelTheme.lightBackground;
 
   // Size constraints
-  double _width = 500.0; // Default width up to 500px
-  double _height = 333.0; // Default 2:3 height ratio
+  late double _width;
+  late double _height;
 
   static const double _minWidth = 100;
   static const double _minHeight = 100;
   static const double _maxWidth = 2000;
   static const double _maxHeight = 2000;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Set initial dimensions and configuration based on the preset type
+    _width = widget.presets.initialWidth;
+    _height = widget.presets.initialHeight;
+    _backgroundColor = widget.presets.backgroundColor;
+
+    if (widget.presets is ScreenPresets) {
+      // Handle screen-specific initialization
+      final screenPresets = widget.presets as ScreenPresets;
+      _isLandscape = screenPresets.isLandscape;
+      _currentDevice = screenPresets.deviceName;
+    }
+
+    if (widget.thumbnailMode){
+      _sidebarExpanded = false;
+    }
+  }
 
   // Sidebar state
   bool _sidebarExpanded = true;
@@ -44,6 +120,11 @@ class _PixelPreviewState extends State<PixelPreview> {
     // If preview is disabled, just return the child widget
     if (!widget.enabled) {
       return widget.child;
+    }
+
+    // If thumbnail mode is enabled, return a simplified version without the sidebar
+    if (widget.thumbnailMode) {
+      return _buildThumbnailView();
     }
 
     // Determine if we're in a mobile view
@@ -157,9 +238,9 @@ class _PixelPreviewState extends State<PixelPreview> {
                           // Scrollable content area
                           Expanded(
                             child: SingleChildScrollView(
-                              child: widget.kind == PixelKind.component
-                                  ? _buildComponentSidebar()
-                                  : _buildScreenSidebar(),
+                              child: widget.presets.isScreen
+                                  ? _buildScreenSidebar()
+                                  : _buildComponentSidebar(),
                             ),
                           ),
                         ],
@@ -173,10 +254,31 @@ class _PixelPreviewState extends State<PixelPreview> {
     );
   }
 
+
+
   Widget _buildComponentSidebar() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Component size presets
+        Text('Component Size', style: PixelTheme.subtitleTextStyle),
+        SizedBox(height: 12),
+
+        // Size preset buttons
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            _buildSizeButton(ComponentSizes.small, 'Small'),
+            _buildSizeButton(ComponentSizes.medium, 'Medium'),
+            _buildSizeButton(ComponentSizes.large, 'Large'),
+          ],
+        ),
+
+        SizedBox(height: 24),
+        Divider(),
+        SizedBox(height: 16),
+
         // Background color options
         Text('Background Color', style: PixelTheme.subtitleTextStyle),
         SizedBox(height: 12),
@@ -243,6 +345,44 @@ class _PixelPreviewState extends State<PixelPreview> {
     );
   }
 
+  /// Builds a simplified view for thumbnail mode without the sidebar
+  Widget _buildThumbnailView() {
+    // Use actual widget size for rendering
+    double renderWidth = widget.presets.initialWidth;
+    double renderHeight = widget.presets.initialHeight;
+
+    return ScreenshotThumbnailBuilder(
+      key: widget.key,
+      backgroundColor: _backgroundColor,
+      renderWidth: renderWidth,
+      renderHeight: renderHeight,
+      // thumbnailWidth: thumbnailWidth,
+      // thumbnailHeight: thumbnailHeight,
+      onTap: () {
+        // Open the full preview when thumbnail is tapped
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+              appBar: AppBar(
+                title: Text(widget.presets.isScreen
+                    ? 'Screen Preview'
+                    : 'Component Preview'),
+                backgroundColor: PixelTheme.primaryBlue,
+              ),
+              body: PixelPreview(
+                key: widget.key,
+                presets: widget.presets,
+                thumbnailMode: false,
+                child: widget.child, // Full preview mode
+              ),
+            ),
+          ),
+        );
+      },
+      child: widget.child,
+    );
+  }
+
   Widget _buildScreenSidebar() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -252,23 +392,13 @@ class _PixelPreviewState extends State<PixelPreview> {
 
         // Device selection buttons
         Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            // Latest iPhone models (2024-2025) - 3 varying sizes
-            _buildDeviceButton('iPhone SE', 375, 667),
-            _buildDeviceButton('iPhone 16', 393, 852),
-            _buildDeviceButton('iPhone 16 Pro Max', 440, 956),
-
-            // // Other devices
-            // _buildDeviceButton('Pixel 4', 393, 851),
-            // _buildDeviceButton('Pixel 9 Pro XL', 443, 985),
-            // _buildDeviceButton('Pixel 9', 410, 919),
-            _buildDeviceButton('Samsung Galaxy S25', 415, 900),
-            _buildDeviceButton('iPad', 768, 1024),
-            _buildDeviceButton('Desktop', 1440, 960),
-          ],
-        ),
+            spacing: 8,
+            runSpacing: 8,
+            children: DeviceDimensions.dimensions.keys.map((key) {
+              return _buildDeviceButton(
+                  DeviceDimensions.dimensions[key]!['name'],
+                  DeviceDimensions.dimensions[key]!['size']);
+            }).toList()),
 
         // Only show orientation toggle for phones and tablets, not desktop
         if (_currentDevice != '' && _currentDevice != 'Desktop')
@@ -350,11 +480,13 @@ class _PixelPreviewState extends State<PixelPreview> {
   }
 
   // Helper method to build device selection buttons
-  Widget _buildDeviceButton(String label, int width, int height) {
+  Widget _buildDeviceButton(String label, Size size) {
+    double width = size.width;
+    double height = size.height;
     // Check if dimensions match in either orientation
     bool isSelected =
-        (_width == width.toDouble() && _height == height.toDouble()) ||
-            (_width == height.toDouble() &&
+        (_width == width && _height == height) ||
+            (_width == height &&
                 _height == width.toDouble() &&
                 _isLandscape);
 
@@ -409,6 +541,47 @@ class _PixelPreviewState extends State<PixelPreview> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  // Helper to build a component size button
+  Widget _buildSizeButton(Size size, String label) {
+    final width = size.width;
+    final height = size.height;
+
+    // Check if this size is currently selected (approximately)
+    bool isSelected =
+        (_width - width).abs() < 10 && (_height - height).abs() < 10;
+
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _width = width;
+          _height = height;
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? PixelTheme.lightBlue.withOpacity(0.2)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(
+            color: isSelected ? PixelTheme.primaryBlue : Colors.grey.shade300,
+            width: 1,
+          ),
+        ),
+        child:Text(
+              label,
+              style: TextStyle(
+                color: isSelected
+                    ? PixelTheme.primaryBlue
+                    : PixelTheme.secondaryText,
+                fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
+              ),
+            ),
       ),
     );
   }

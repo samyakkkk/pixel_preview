@@ -24,12 +24,10 @@
 ## ✨ Features
 
 - **Interactive Preview Environment**: View your Flutter widgets in an isolated environment with resizable frames
-- **Component & Screen Modes**: Preview individual components or entire screens with specialized settings for each
-- **Customizable Background**: Toggle between light, dark, and transparent backgrounds to ensure your UI works in all themes
+- **Component & Screen Presets**: Use specialized `ComponentPresets` and `ScreenPresets` for different preview types
+- **Device Type Presets**: Test screens on common device sizes (iPhone, Samsung, iPad, Desktop)
 - **Responsive Testing**: Resize components with intuitive handles to test responsiveness
-- **Device Presets**: Test screens on common device sizes (iPhone, Samsung, iPad, Desktop)
-- **Orientation Testing**: Switch between portrait and landscape orientations
-- **Development Mode Only**: Automatically disabled in release builds for zero production impact
+- **Component Library**: Create a comprehensive UI component library with `PixelApp`
 
 ## 📱 Cross-Device Support
 
@@ -59,36 +57,28 @@ import 'package:pixel_preview/pixel_preview.dart';
 
 ### Previewing a Component
 
-Wrap any widget with `PixelPreview` to create an interactive preview environment:
+Wrap any widget with `PixelPreview` and use `ComponentPresets` to create an interactive component preview environment:
 
 ```dart
 PixelPreview(
-  kind: PixelKind.component,
+  presets: ComponentPresets(),
   child: YourCustomWidget(),
 )
 ```
 
-The component preview mode provides:
-- Background color options (light/dark/transparent)
-- Resizable canvas with drag handles
-- Current size display
 
 ### Previewing a Screen
 
-For full screens, use the screen mode which provides device size presets:
+For full screens, use `ScreenPresets` which provides device size presets:
 
 ```dart
 PixelPreview(
-  kind: PixelKind.screen,
+  presets: ScreenPresets(
+    deviceType: DeviceType.iPhone16,  // Choose from various device types
+  ),
   child: YourScreenWidget(),
 )
 ```
-
-The screen preview mode provides:
-- Preset device sizes (iPhone, Samsung, iPad, Desktop)
-- Orientation switching (portrait/landscape)
-- Resizable canvas with drag handles
-- Current size display
 
 ### Disabling in Production
 
@@ -96,7 +86,7 @@ PixelPreview is automatically disabled in release mode, but you can explicitly c
 
 ```dart
 PixelPreview(
-  kind: PixelKind.component,
+  presets: ComponentPresets(),
   enabled: kDebugMode, // Only enabled in debug mode
   child: YourWidget(),
 )
@@ -107,9 +97,12 @@ PixelPreview(
 Check out the `/example` folder for a complete implementation showing both component and screen previews:
 
 ```dart
-// Component example
+// Component example with predefined size
 PixelPreview(
-  kind: PixelKind.component,
+  presets: ComponentPresets(
+    size: ComponentSizes.medium,
+    backgroundColor: Colors.white,
+  ),
   child: ResponsiveAppComponent(
     title: 'Feature Card',
     description: 'A responsive component that adapts to various constraint sizes.',
@@ -118,14 +111,48 @@ PixelPreview(
   ),
 )
 
+// Component example with custom size
+PixelPreview(
+  presets: ComponentPresets(
+    size: Size(500, 250),
+    backgroundColor: const Color(0xFFF5F5F5),
+  ),
+  child: ResponsiveAppComponent(
+    title: 'Analytics Widget',
+    description: 'Data visualization component with responsive layout.',
+    icon: Icons.analytics,
+    onTap: () {},
+  ),
+)
+
 // Screen example
 PixelPreview(
-  kind: PixelKind.screen,
+  presets: ScreenPresets(
+    deviceType: DeviceType.iPhone16,
+    isLandscape: true,
+  ),
   child: ResponsiveScreen(
     title: "Dashboard",
   ),
 )
 ```
+
+### Creating a UI Component Library with PixelApp
+
+PixelApp allows you to create a comprehensive UI component library by displaying all your components and screens together in a responsive grid layout:
+
+```dart
+PixelApp(
+  title: 'My UI Kit',
+  widgets: [
+    // Add your components and screens here
+    PixelPreview(...),
+    PixelPreview(...),
+  ],
+)
+```
+
+Check out the example app's `main.dart` file for a complete implementation of a UI component library using PixelApp.
 
 ## 🔄 Why Pixel Preview?
 
