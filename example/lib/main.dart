@@ -19,9 +19,9 @@ class _MyAppState extends State<MyApp> {
   static const Color primaryBlue = Color(0xFF1A365D);
 
   // Set only one of these to true at a time
-  bool showPixelApp = false; // Show the full PixelApp with all components
+  bool showPixelApp = true; // Show the full PixelApp with all components
   bool showComponent = false; // Show a single component preview
-  bool showScreen = true; // Show a single screen preview
+  bool showScreen = false; // Show a single screen preview
 
   @override
   Widget build(BuildContext context) {
