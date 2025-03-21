@@ -1,3 +1,7 @@
 ## 0.0.1
 
-* TODO: Describe initial release.
+* Releasing Pixel Preview
+
+## 0.0.02
+
+* `PixelApp` for UI Kit Preview
