@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:pixel_preview/frame_widget.dart';
-import 'package:pixel_preview/pixel_theme.dart';
-import 'package:pixel_preview/screenshot_thumbnail.dart';
+import 'package:pixel_preview/pixel_preview/frame_widget.dart';
+import 'package:pixel_preview/pixel_preview/screenshot_thumbnail.dart';
+import 'package:pixel_preview/utils/pixel_theme.dart';
+import 'package:pixel_preview/utils/presets.dart';
+import 'package:pixel_preview/utils/sizes.dart';
 
 /// Preview type for backward compatibility
 @Deprecated(
@@ -30,113 +32,11 @@ enum DeviceType {
   desktop,
 }
 
-/// Device dimensions mapping
-class DeviceDimensions {
-  static const Map<DeviceType, Map<String, dynamic>> dimensions = {
-    DeviceType.iPhoneSE: {
-      'name': 'iPhone SE',
-      'size': Size(375.0, 667.0),
-    },
-    DeviceType.iPhone16: {
-      'name': 'iPhone 16',
-      'size': Size(393.0, 852.0),
-    },
-    DeviceType.iPhone16ProMax: {
-      'name': 'iPhone 16 Pro Max',
-      'size': Size(440.0, 956.0),
-    },
-    DeviceType.samsungGalaxyS25: {
-      'name': 'Samsung Galaxy S25',
-      'size': Size(415.0, 900.0),
-    },
-    DeviceType.iPad: {
-      'name': 'iPad',
-      'size': Size(768.0, 1024.0),
-    },
-    DeviceType.desktop: {
-      'name': 'Desktop',
-      'size': Size(1440.0, 960.0),
-    },
-  };
-}
-
-/// Abstract base class for all presets
-abstract class Presets {
-  const Presets();
-
-  /// Returns true if this preset is for a screen, false for a component
-  bool get isScreen;
-
-  /// Get the initial width for this preset
-  double get initialWidth;
-
-  /// Get the initial height for this preset
-  double get initialHeight;
-
-  /// Get the initial background color
-  Color get backgroundColor => Colors.white;
-}
-
-/// Preset configuration for component previews
-class ComponentPresets extends Presets {
-  /// Size of the component
-  final Size size;
-
-  /// Initial background color
-  @override
-  final Color backgroundColor;
-
-  const ComponentPresets({
-    this.size = ComponentSizes.medium,
-    this.backgroundColor = Colors.white,
-  });
-
-  @override
-  bool get isScreen => false;
-
-  @override
-  double get initialWidth => size.width;
-
-  @override
-  double get initialHeight => size.height;
-}
-
-/// Preset configuration for screen previews
-class ScreenPresets extends Presets {
-  /// Initial device type
-  final DeviceType deviceType;
-
-  /// Initial orientation (true for landscape, false for portrait)
-  final bool isLandscape;
-
-  const ScreenPresets({
-    this.deviceType = DeviceType.iPhone16,
-    this.isLandscape = false,
-  });
-
-  @override
-  bool get isScreen => true;
-
-  @override
-  double get initialWidth {
-    final dimensions = DeviceDimensions.dimensions[deviceType]!;
-    final size = dimensions['size'] as Size;
-    return isLandscape ? size.height : size.width;
-  }
-
-  @override
-  double get initialHeight {
-    final dimensions = DeviceDimensions.dimensions[deviceType]!;
-    final size = dimensions['size'] as Size;
-    return isLandscape ? size.width : size.height;
-  }
-
-  /// Get the device name
-  String get deviceName => DeviceDimensions.dimensions[deviceType]!['name'];
-}
-
 class PixelPreview extends StatefulWidget {
+  /// Your widget to view preview of.
   final Widget child;
+
+  /// If disabled, will just display the widget itself. Disabled by default in release mode.
   final bool enabled;
 
   /// When true, the sidebar with component options will be hidden.
@@ -150,8 +50,8 @@ class PixelPreview extends StatefulWidget {
 
   /// Creates a PixelPreview widget.
   ///
-  /// You can use either the new `presets` parameter or the deprecated `kind` parameter.
-  /// Using `presets` provides more customization options.
+  /// The type of preset [ComponentPresets] or [ScreenPresets] determines
+  /// whether this is a component or screen preview
   PixelPreview({
     super.key,
     required this.child,

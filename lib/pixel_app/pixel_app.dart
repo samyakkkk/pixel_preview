@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:pixel_preview/preview_widget.dart';
-import 'package:pixel_preview/pixel_theme.dart';
+import 'package:pixel_preview/pixel_preview/preview_widget.dart';
 import 'package:pixel_preview/pixel_app/components_builder.dart';
+import 'package:pixel_preview/utils/pixel_theme.dart';
 
-/// A widget that displays a collection of PixelPreview components and screens in a grid layout.
+/// A widget that displays a collection of PixelPreview components in a grid layout.
 ///
-/// This widget provides a tabbed interface to separate components and screens,
-/// and displays them in a responsive grid layout optimized for larger landscape screens.
+/// This widget provides a responsive grid layout optimized for larger landscape screens.
 ///
 /// Note: The widgets provided to this class should already be wrapped in PixelPreview widgets.
+///
+/// Screens support is coming in a future update.
 class PixelApp extends StatefulWidget {
-  /// List of all widgets (components and screens) to display
+  /// List of all widgets (currently only components are supported) to display
   final List<Widget> widgets;
 
   /// Optional title for the app
@@ -54,6 +55,18 @@ class _PixelAppState extends State<PixelApp>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    
+    // Check if user has provided any screens in the init state
+    final hasScreens = widget.widgets.any((w) {
+      if (w is PixelPreview) {
+        return w.presets.isScreen;
+      }
+      return false;
+    });
+    
+    if (hasScreens) {
+      debugPrint('PixelApp: Screens are not currently supported. Screen widgets will be ignored.');
+    }
   }
 
   @override
@@ -70,7 +83,7 @@ class _PixelAppState extends State<PixelApp>
           useMaterial3: true,
         );
 
-    // If widgets are provided, filter them by preset type
+    // If widgets are provided, filter them by preset type (only components are currently supported)
     List<PixelPreview> componentWidgets =
         List<PixelPreview>.from(widget.widgets.where((w) {
       if (w is PixelPreview) {
@@ -78,6 +91,18 @@ class _PixelAppState extends State<PixelApp>
       }
       return false;
     }).toList());
+    
+    // Check if user has provided any screens and log a debug message
+    final screenWidgets = widget.widgets.where((w) {
+      if (w is PixelPreview) {
+        return w.presets.isScreen; // Screen presets
+      }
+      return false;
+    }).toList();
+    
+    if (screenWidgets.isNotEmpty) {
+      debugPrint('PixelApp: Found ${screenWidgets.length} screen widgets, but screens are not currently supported.');
+    }
 
     // List<PixelPreview> screenWidgets =
     //     List<PixelPreview>.from(widget.widgets.where((w) {
