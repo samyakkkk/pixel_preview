@@ -95,7 +95,6 @@ class _ScreensBuilderState extends State<ScreensBuilder> {
         } else if (_selectedDeviceFilter == DeviceType.iPad) {
           aspectRatio = 0.75; // iPad has more square aspect ratio
         }
-        print("currently displaying screens ${_displayScreens.length}");
         return widget.screens.isEmpty
             ? EmptyState(isScreen: true)
             : Column(

@@ -180,8 +180,6 @@ class _ScrollableFabricState extends State<ScrollableFabric> {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        "screenshot render width ${widget.widget.renderWidth} height: ${widget.widget.renderHeight}");
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       physics: const NeverScrollableScrollPhysics(),
