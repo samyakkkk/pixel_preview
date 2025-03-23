@@ -9,3 +9,7 @@
 ## 0.0.3
 
 * `PixelGroup` for grouping UI Kit components
+
+## 0.0.4
+
+* Readme updates

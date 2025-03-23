@@ -96,7 +96,7 @@ PixelPreview(
 
 ### Creating a UI Component Library with PixelApp
 <p align="center">
-  <img src="./media/uikit.png" alt="UI Kit" width="80%" style="border-radius: 6px; border: 1px solid #ddd;" />
+  <img src="https://github.com/samyakkkk/pixel_preview/raw/main/media/uikit.png" alt="UI Kit" width="80%" style="border-radius: 6px; border: 1px solid #ddd;" />
 </p>
 
 `PixelApp` allows you to create a comprehensive UI component library by displaying all your components and screens(support soon) together in a responsive grid layout:
@@ -105,7 +105,7 @@ PixelPreview(
 PixelApp(
   title: 'My UI Kit',
   groups: [
-    // Add your card components here
+    // Add your components here in groups
     PixelGroup(
       title: 'Cards',
       children: [
