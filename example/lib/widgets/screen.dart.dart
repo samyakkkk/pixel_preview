@@ -2,6 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:example/widgets/component.dart';
 
 /// A responsive screen that adapts to various screen sizes.
+///
+///
+///
+// colors
+const Color primaryBlue = Color(0xFF1A365D);
+const Color lightBlue = Color(0xFF4299E1);
+const Color coralRed = Color(0xFFFF6B6B);
+const Color mintGreen = Color(0xFF4FD1C5);
+const Color lightGray = Color(0xFFE2E8F0);
+
 class ResponsiveScreen extends StatefulWidget {
   final String title;
 
@@ -13,13 +23,6 @@ class ResponsiveScreen extends StatefulWidget {
 
 class _ResponsiveScreenState extends State<ResponsiveScreen> {
   int _selectedIndex = 0;
-
-  // colors
-  static const Color primaryBlue = Color(0xFF1A365D);
-  static const Color lightBlue = Color(0xFF4299E1);
-  static const Color coralRed = Color(0xFFFF6B6B);
-  static const Color mintGreen = Color(0xFF4FD1C5);
-  static const Color lightGray = Color(0xFFE2E8F0);
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +52,7 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
                         onPressed: () {},
                       ),
                       const SizedBox(width: 16),
-                      _buildUserAvatar(),
+                      UserAvatar(lightBlue: lightBlue),
                       const SizedBox(width: 24),
                     ],
           ),
@@ -73,7 +76,15 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
             ],
           ),
 
-          bottomNavigationBar: isSmallScreen ? _buildBottomNavigation() : null,
+          bottomNavigationBar:
+              isSmallScreen
+                  ? BottomNav(
+                    lightBlue: lightBlue,
+                    updateIndex:
+                        (index) => setState(() => _selectedIndex = index),
+                    selectedIndex: _selectedIndex,
+                  )
+                  : null,
           floatingActionButton: FloatingActionButton(
             backgroundColor: coralRed,
             foregroundColor: Colors.white,
@@ -82,13 +93,6 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildUserAvatar() {
-    return const CircleAvatar(
-      backgroundColor: lightBlue,
-      child: Icon(Icons.person, color: Colors.white),
     );
   }
 
@@ -102,7 +106,7 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _buildUserAvatar(),
+                  UserAvatar(lightBlue: lightBlue),
                   const SizedBox(height: 16),
                   const Text(
                     'PixelPreview Dashboard',
@@ -179,81 +183,8 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
       {'icon': Icons.folder, 'label': 'Projects'},
       {'icon': Icons.message, 'label': 'Messages'},
     ];
+    return NavigationItems(items: items, selectedIndex: _selectedIndex, isCompact: isCompact, updateSelectedIndex: (index)=>setState(() => _selectedIndex = index));
 
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: items.length,
-      itemBuilder: (context, index) {
-        final item = items[index];
-        final isSelected = _selectedIndex == index;
-
-        if (isCompact) {
-          return Tooltip(
-            message: item['label'] as String,
-            child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              decoration: BoxDecoration(
-                color:
-                    isSelected
-                        ? lightBlue.withValues(alpha: 0.1)
-                        : Colors.transparent,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: IconButton(
-                icon: Icon(
-                  item['icon'] as IconData,
-                  color: isSelected ? lightBlue : Colors.grey,
-                ),
-                onPressed: () => setState(() => _selectedIndex = index),
-              ),
-            ),
-          );
-        } else {
-          return ListTile(
-            leading: Icon(
-              item['icon'] as IconData,
-              color: isSelected ? lightBlue : Colors.grey,
-            ),
-            title: Text(
-              item['label'] as String,
-              style: TextStyle(
-                color: isSelected ? primaryBlue : Colors.black87,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              ),
-            ),
-            selected: isSelected,
-            selectedTileColor: lightBlue.withValues(alpha: 0.1),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            onTap: () => setState(() => _selectedIndex = index),
-          );
-        }
-      },
-    );
-  }
-
-  Widget _buildBottomNavigation() {
-    return BottomNavigationBar(
-      currentIndex: _selectedIndex,
-      onTap: (index) => setState(() => _selectedIndex = index),
-      selectedItemColor: lightBlue,
-      unselectedItemColor: Colors.grey,
-      type: BottomNavigationBarType.fixed,
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.dashboard),
-          label: 'Dashboard',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.analytics),
-          label: 'Analytics',
-        ),
-        BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Users'),
-        BottomNavigationBarItem(icon: Icon(Icons.folder), label: 'Projects'),
-      ],
-    );
   }
 
   Widget _buildMainContent(
@@ -331,56 +262,9 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
       },
     ];
 
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: isSmallScreen ? 2 : 4,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-        childAspectRatio: (isSmallScreen || isMediumScreen) ? 1.3 : 1.2,
-      ),
-      itemCount: statItems.length,
-      itemBuilder: (context, index) {
-        final item = statItems[index];
-        return Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(
-                  item['icon'] as IconData,
-                  color: item['color'] as Color,
-                  size: 28,
-                ),
-                const Spacer(),
-                FittedBox(
-                  fit: BoxFit.contain,
-                  child: Text(
-                    item['value'] as String,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: primaryBlue,
-                    ),
-                  ),
-                ),
-                // const SizedBox(height: 4),
-                // Text(
-                //   item['label'] as String,
-                //   style: const TextStyle(fontSize: 14, color: Colors.black54),
-                // ),
-              ],
-            ),
-          ),
-        );
-      },
+    return StatWidget(
+      statItems: statItems,
+      primaryBlue: primaryBlue,
     );
   }
 
@@ -499,38 +383,7 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
             separatorBuilder: (context, index) => const Divider(),
             itemBuilder: (context, index) {
               final activity = activities[index];
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: lightBlue.withValues(alpha: 0.2),
-                  child: Text(
-                    activity['user']!.substring(0, 1),
-                    style: const TextStyle(
-                      color: lightBlue,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                title: RichText(
-                  text: TextSpan(
-                    style: const TextStyle(color: Colors.black87, fontSize: 14),
-                    children: [
-                      TextSpan(
-                        text: activity['user'],
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      TextSpan(text: ' ${activity['action']}'),
-                    ],
-                  ),
-                ),
-                subtitle: Text(
-                  activity['time']!,
-                  style: const TextStyle(color: Colors.black54, fontSize: 12),
-                ),
-                trailing: IconButton(
-                  icon: const Icon(Icons.more_vert),
-                  onPressed: () {},
-                ),
-              );
+              return ActivityCard(lightBlue: lightBlue, activity: activity);
             },
           ),
         ),
@@ -595,6 +448,141 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
       },
     ];
 
+    return TimelineActivityCard(
+          
+          coralRed: coralRed,
+          lightGray: lightGray,
+          activities: activities,
+  
+        );
+  }
+
+  Widget _buildQuickActions() {
+    final actions = [
+      {'icon': Icons.add_circle, 'label': 'New Project', 'color': mintGreen},
+      {'icon': Icons.person_add, 'label': 'Add User', 'color': lightBlue},
+      {'icon': Icons.upload_file, 'label': 'Upload File', 'color': coralRed},
+      {'icon': Icons.settings, 'label': 'Settings', 'color': Colors.grey},
+    ];
+
+    return Column(
+      children:
+          actions.map((action) {
+            return QuickAction(action: action);
+          }).toList(),
+    );
+  }
+}
+
+class NavigationItems extends StatelessWidget{
+  const NavigationItems({super.key, 
+    required this.items,
+    required this.selectedIndex,
+    required this.isCompact,
+    required this.updateSelectedIndex
+  });
+  
+  final List items;
+  final int selectedIndex;
+  final bool isCompact;
+  final Function(int) updateSelectedIndex;
+  @override
+  Widget build(BuildContext context) {
+   return  ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        final item = items[index];
+        final isSelected = selectedIndex == index;
+
+        if (isCompact) {
+          return Tooltip(
+            message: item['label'] as String,
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              decoration: BoxDecoration(
+                color:
+                    isSelected
+                        ? lightBlue.withValues(alpha: 0.1)
+                        : Colors.transparent,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: IconButton(
+                icon: Icon(
+                  item['icon'] as IconData,
+                  color: isSelected ? lightBlue : Colors.grey,
+                ),
+                onPressed: () => updateSelectedIndex(index),
+              ),
+            ),
+          );
+        } else {
+          return ListTile(
+            leading: Icon(
+              item['icon'] as IconData,
+              color: isSelected ? lightBlue : Colors.grey,
+            ),
+            title: Text(
+              item['label'] as String,
+              style: TextStyle(
+                color: isSelected ? primaryBlue : Colors.black87,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
+            selected: isSelected,
+            selectedTileColor: lightBlue.withValues(alpha: 0.1),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            onTap: () => updateSelectedIndex(index),
+          );
+        }
+      },
+    );
+  }
+
+}
+
+class QuickAction extends StatelessWidget {
+  const QuickAction({required this.action, super.key});
+  final Map<String, Object> action;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(
+        action['icon'] as IconData,
+        color: action['color'] as Color,
+      ),
+      title: Text(
+        action['label'] as String,
+        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+      ),
+      contentPadding: EdgeInsets.zero,
+      dense: true,
+      onTap: () {},
+    );
+  }
+}
+
+class TimelineActivityCard extends StatelessWidget {
+  const TimelineActivityCard({
+    super.key,
+  
+    required this.coralRed,
+    required this.lightGray,
+    required this.activities,
+  });
+
+
+  final Color coralRed;
+  final Color lightGray;
+  final List<Map<String, String>> activities;
+
+
+  @override
+  Widget build(BuildContext context) {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -657,35 +645,202 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
       },
     );
   }
+}
 
-  Widget _buildQuickActions() {
-    final actions = [
-      {'icon': Icons.add_circle, 'label': 'New Project', 'color': mintGreen},
-      {'icon': Icons.person_add, 'label': 'Add User', 'color': lightBlue},
-      {'icon': Icons.upload_file, 'label': 'Upload File', 'color': coralRed},
-      {'icon': Icons.settings, 'label': 'Settings', 'color': Colors.grey},
-    ];
+class ActivityCard extends StatelessWidget {
+  const ActivityCard({
+    super.key,
+    required this.lightBlue,
+    required this.activity,
+  });
 
-    return Column(
-      children:
-          actions.map((action) {
-            return ListTile(
-              leading: Icon(
-                action['icon'] as IconData,
-                color: action['color'] as Color,
+  final Color lightBlue;
+  final Map<String, String> activity;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundColor: lightBlue.withValues(alpha: 0.2),
+        child: Text(
+          activity['user']!.substring(0, 1),
+          style: TextStyle(color: lightBlue, fontWeight: FontWeight.bold),
+        ),
+      ),
+      title: RichText(
+        text: TextSpan(
+          style: const TextStyle(color: Colors.black87, fontSize: 14),
+          children: [
+            TextSpan(
+              text: activity['user'],
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            TextSpan(text: ' ${activity['action']}'),
+          ],
+        ),
+      ),
+      subtitle: Text(
+        activity['time']!,
+        style: const TextStyle(color: Colors.black54, fontSize: 12),
+      ),
+      trailing: IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
+    );
+  }
+}
+
+class StatWidget extends StatelessWidget {
+  const StatWidget({
+    super.key,
+    required this.statItems,
+    required this.primaryBlue,
+  });
+
+  final List<Map<String, Object>> statItems;
+  final Color primaryBlue;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Determine grid properties based on available width
+        int crossAxisCount;
+        double childAspectRatio;
+        
+        if (constraints.maxWidth < 400) {
+          crossAxisCount = 1;
+          childAspectRatio = 2.0;
+        } else if (constraints.maxWidth < 600) {
+          crossAxisCount = 2;
+          childAspectRatio = 1.3;
+        } else if (constraints.maxWidth < 900) {
+          crossAxisCount = 3;
+          childAspectRatio = 1.2;
+        } else {
+          crossAxisCount = 4;
+          childAspectRatio = 1.2;
+        }
+
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: childAspectRatio,
+          ),
+          itemCount: statItems.length,
+          itemBuilder: (context, index) {
+            final item = statItems[index];
+            return Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
-              title: Text(
-                action['label'] as String,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: LayoutBuilder(
+                  builder: (context, cardConstraints) {
+                    final isCompact = cardConstraints.maxWidth < 150;
+                    final iconSize = isCompact ? 20.0 : 28.0;
+                    final valueSize = isCompact ? 18.0 : 24.0;
+                    final labelSize = isCompact ? 12.0 : 14.0;
+                    
+                    return Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Icon(
+                                item['icon'] as IconData,
+                                color: item['color'] as Color,
+                                size: iconSize,
+                              ),
+                              const SizedBox(height: 12),
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  item['value'] as String,
+                                  style: TextStyle(
+                                    fontSize: valueSize,
+                                    fontWeight: FontWeight.bold,
+                                    color: primaryBlue,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                item['label'] as String,
+                                style: TextStyle(
+                                  fontSize: labelSize,
+                                  color: Colors.black54,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-              onTap: () {},
             );
-          }).toList(),
+          },
+        );
+      },
+    );
+  }
+}
+class BottomNav extends StatelessWidget {
+
+  const BottomNav({
+    super.key,
+    required this.lightBlue,
+    required this.updateIndex,
+    required this.selectedIndex,
+  });
+
+  final Color lightBlue;
+  final Function(int p1) updateIndex;
+  final int selectedIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBar(
+      currentIndex: selectedIndex,
+      onTap: updateIndex,
+      selectedItemColor: lightBlue,
+      unselectedItemColor: Colors.grey,
+      type: BottomNavigationBarType.fixed,
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.dashboard),
+          label: 'Dashboard',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.analytics),
+          label: 'Analytics',
+        ),
+        BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Users'),
+        BottomNavigationBarItem(icon: Icon(Icons.folder), label: 'Projects'),
+      ],
+    );
+  }
+}
+
+class UserAvatar extends StatelessWidget {
+  const UserAvatar({super.key, required this.lightBlue});
+
+  final Color lightBlue;
+
+  @override
+  Widget build(BuildContext context) {
+    return CircleAvatar(
+      backgroundColor: lightBlue,
+      child: const Icon(Icons.person, color: Colors.white),
     );
   }
 }

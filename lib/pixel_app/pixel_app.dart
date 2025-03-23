@@ -118,7 +118,7 @@ class _PixelAppState extends State<PixelApp>
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Pixel App View"),
+          title: Text(widget.title),
           backgroundColor: PixelTheme.primaryBlue,
           foregroundColor: Colors.white,
           // bottom: TabBar(

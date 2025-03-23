@@ -15,7 +15,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   static const Color primaryBlue = Color(0xFF1A365D);
 
   // Set only one of these to true at a time
@@ -69,7 +68,7 @@ class _MyAppState extends State<MyApp> {
         title: 'Pixel UI Kit',
         // Using a single widgets list instead of separate components and screens lists
         widgets: [
-          // Component 1 with small size preset
+          // Original components
           PixelPreview(
             presets: ComponentPresets(
               size: ComponentSizes.small,
@@ -82,71 +81,208 @@ class _MyAppState extends State<MyApp> {
               onTap: () {},
             ),
           ),
-          // Component 2 with medium size preset
           PixelPreview(
             presets: ComponentPresets(
               size: ComponentSizes.medium,
-              backgroundColor: const Color(0xFFF5F5F5),
+              backgroundColor: Colors.white,
             ),
             child: ResponsiveAppComponent(
-              title: 'Analytics Widget',
-              description:
-                  'Data visualization component with responsive layout.',
-              icon: Icons.analytics,
+              title: 'Dashboard Card',
+              description: 'A responsive card component for dashboards.',
+              icon: Icons.dashboard,
               onTap: () {},
             ),
           ),
-          // Component 3 with large size preset
           PixelPreview(
             presets: ComponentPresets(
               size: ComponentSizes.large,
               backgroundColor: Colors.white,
             ),
             child: ResponsiveAppComponent(
-              title: 'User Profile',
-              description: 'User profile card with adaptive sizing.',
-              icon: Icons.person,
+              title: 'Dashboard Card',
+              description: 'A responsive card component for dashboards.',
+              icon: Icons.dashboard,
               onTap: () {},
             ),
           ),
-          // Component 4 with custom background color
+
+          // StatWidget
           PixelPreview(
             presets: ComponentPresets(
               size: ComponentSizes.medium,
-              backgroundColor: const Color(0xFFE6F7FF), // Light blue background
+              backgroundColor: Colors.white,
             ),
-            child: ResponsiveAppComponent(
-              title: 'Settings Panel',
-              description: 'Configuration panel with responsive layout.',
-              icon: Icons.settings,
-              onTap: () {},
+            child: StatWidget(
+              primaryBlue: const Color(0xFF1A365D),
+
+              statItems: statItems,
             ),
           ),
-          // Screen 1 with iPhone 16 preset
+          PixelPreview(
+            presets: ComponentPresets(
+              size: Size(950.0, 500.0),
+              backgroundColor: Colors.white,
+            ),
+            child: StatWidget(
+              primaryBlue: const Color(0xFF1A365D),
+
+              statItems: statItems,
+            ),
+          ),
+
+          // ActivityCard
+          PixelPreview(
+            presets: ComponentPresets(
+              size: ComponentSizes.medium,
+              backgroundColor: Colors.white,
+            ),
+            child: ActivityCard(
+              lightBlue: const Color(0xFF4299E1),
+              activity: {
+                'user': 'John Doe',
+                'action': 'created a new project',
+                'time': '2 hours ago',
+              },
+            ),
+          ),
+
+          // Newly created widgets from screen.dart.dart
+          // UserAvatar widget
+          PixelPreview(
+            presets: ComponentPresets(
+              size: ComponentSizes.small,
+              backgroundColor: Colors.white,
+            ),
+            child: UserAvatar(lightBlue: const Color(0xFF4299E1)),
+          ),
+
+          // BottomNav widget
+          PixelPreview(
+            presets: ComponentPresets(
+              size: ComponentSizes.large,
+              backgroundColor: Colors.white,
+            ),
+            child: BottomNav(
+              lightBlue: const Color(0xFF4299E1),
+              selectedIndex: 0,
+              updateIndex: (index) {},
+            ),
+          ),
+
+          // TimelineActivityCard
+          PixelPreview(
+            presets: ComponentPresets(
+              size: ComponentSizes.medium,
+              backgroundColor: Colors.white,
+            ),
+            child: TimelineActivityCard(
+              coralRed: const Color(0xFFFF6B6B),
+              lightGray: const Color(0xFFE2E8F0),
+              activities: [
+                {
+                  'user': 'John Doe',
+                  'action': 'created a new project',
+                  'time': '2h ago',
+                },
+                {
+                  'user': 'Jane Smith',
+                  'action': 'updated user settings',
+                  'time': '4h ago',
+                },
+                {
+                  'user': 'Mike Johnson',
+                  'action': 'uploaded new content',
+                  'time': 'Yesterday',
+                },
+                {
+                  'user': 'Sarah Williams',
+                  'action': 'completed onboarding',
+                  'time': 'Yesterday',
+                },
+              ],
+            ),
+          ),
+
+          // QuickAction
+          PixelPreview(
+            presets: ComponentPresets(
+              size: ComponentSizes.small,
+              backgroundColor: Colors.white,
+            ),
+            child: QuickAction(
+              action: {
+                'icon': Icons.add_circle,
+                'label': 'New Project',
+                'color': const Color(0xFF4FD1C5),
+              },
+            ),
+          ),
+
+          // Original screens
           PixelPreview(
             presets: ScreenPresets(deviceType: DeviceType.iPhone16),
             child: ResponsiveScreen(
               title: "Dashboard",
-              key: ValueKey("DASHBOARD"),
+              key: const ValueKey("DASHBOARD"),
             ),
           ),
-          // Screen 2 with iPad preset
           PixelPreview(
-            key: ValueKey("ANALYTICS"),
+            key: const ValueKey("ANALYTICS"),
             presets: ScreenPresets(deviceType: DeviceType.iPad),
             child: ResponsiveScreen(title: "Analytics"),
           ),
-          // Screen 3 with desktop preset in landscape mode
           PixelPreview(
-            key: ValueKey("USER PROFILE"),
+            key: const ValueKey("USER PROFILE"),
             presets: ScreenPresets(
               deviceType: DeviceType.desktop,
               isLandscape: true,
             ),
             child: ResponsiveScreen(title: "User Profile"),
           ),
+          PixelPreview(
+            presets: ComponentPresets(),
+            child: NavigationItems(
+              items: [
+                {'icon': Icons.dashboard, 'label': 'Dashboard'},
+                {'icon': Icons.analytics, 'label': 'Analytics'},
+                {'icon': Icons.people, 'label': 'Users'},
+                {'icon': Icons.folder, 'label': 'Projects'},
+                {'icon': Icons.message, 'label': 'Messages'},
+              ],
+              selectedIndex: 0,
+              isCompact: true,
+              updateSelectedIndex: (_) {},
+            ),
+          ),
         ],
       );
     }
   }
+
+  final statItems = [
+    {
+      'icon': Icons.people,
+      'label': 'Users',
+      'value': '2,543',
+      'color': lightBlue,
+    },
+    {
+      'icon': Icons.bar_chart,
+      'label': 'Revenue',
+      'value': '\$12,432',
+      'color': mintGreen,
+    },
+    {
+      'icon': Icons.trending_up,
+      'label': 'Growth',
+      'value': '+24%',
+      'color': coralRed,
+    },
+    {
+      'icon': Icons.star,
+      'label': 'Rating',
+      'value': '4.8',
+      'color': Colors.amber,
+    },
+  ];
 }
