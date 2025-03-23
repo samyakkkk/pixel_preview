@@ -85,18 +85,6 @@ class _MyAppState extends State<MyApp> {
                   onTap: () {},
                 ),
               ),
-              // PixelPreview(
-              //   presets: ComponentPresets(
-              //     size: ComponentSizes.medium,
-              //     backgroundColor: Colors.white,
-              //   ),
-              //   child: ResponsiveAppComponent(
-              //     title: 'Dashboard Card',
-              //     description: 'A responsive card component for dashboards.',
-              //     icon: Icons.dashboard,
-              //     onTap: () {},
-              //   ),
-              // ),
               PixelPreview(
                 presets: ComponentPresets(
                   size: ComponentSizes.large,
@@ -216,43 +204,6 @@ class _MyAppState extends State<MyApp> {
                 ),
               ),
             ],
-
-            // Original screens [Currently not supported]
-            // PixelPreview(
-            //   presets: ScreenPresets(deviceType: DeviceType.iPhone16),
-            //   child: ResponsiveScreen(
-            //     title: "Dashboard",
-            //     key: const ValueKey("DASHBOARD"),
-            //   ),
-            // ),
-            // PixelPreview(
-            //   key: const ValueKey("ANALYTICS"),
-            //   presets: ScreenPresets(deviceType: DeviceType.iPad),
-            //   child: ResponsiveScreen(title: "Analytics"),
-            // ),
-            // PixelPreview(
-            //   key: const ValueKey("USER PROFILE"),
-            //   presets: ScreenPresets(
-            //     deviceType: DeviceType.desktop,
-            //     isLandscape: true,
-            //   ),
-            //   child: ResponsiveScreen(title: "User Profile"),
-            // ),
-            // PixelPreview(
-            //   presets: ComponentPresets(),
-            //   child: NavigationItems(
-            //     items: [
-            //       {'icon': Icons.dashboard, 'label': 'Dashboard'},
-            //       {'icon': Icons.analytics, 'label': 'Analytics'},
-            //       {'icon': Icons.people, 'label': 'Users'},
-            //       {'icon': Icons.folder, 'label': 'Projects'},
-            //       {'icon': Icons.message, 'label': 'Messages'},
-            //     ],
-            //     selectedIndex: 0,
-            //     isCompact: true,
-            //     updateSelectedIndex: (_) {},
-            //   ),
-            // ),
           ),
 
           PixelGroup(

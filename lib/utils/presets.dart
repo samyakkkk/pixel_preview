@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:pixel_preview/pixel_preview/preview_widget.dart';
 import 'package:pixel_preview/utils/sizes.dart';

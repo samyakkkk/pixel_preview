@@ -123,7 +123,7 @@ class _ScreensBuilderState extends State<ScreensBuilder> {
                                   _screensByDeviceType[_selectedDeviceFilter]!;
                             });
                           },
-                          selectedColor: PixelTheme.lightBlue.withOpacity(0.3),
+                          selectedColor: PixelTheme.lightBlue.withValues(alpha: 0.3),
                           checkmarkColor: PixelTheme.primaryBlue,
                           labelStyle: TextStyle(
                             color: _selectedDeviceFilter == deviceType
