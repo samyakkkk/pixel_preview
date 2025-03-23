@@ -95,9 +95,8 @@ PixelPreview(
 ```
 
 ### Creating a UI Component Library with PixelApp
-<p align="center">
-  <img src="https://github.com/samyakkkk/pixel_preview/raw/main/media/uikit.png" alt="UI Kit" width="80%" style="border-radius: 6px; border: 1px solid #ddd;" />
-</p>
+
+<img src="https://github.com/samyakkkk/pixel_preview/raw/main/media/uikit.png" alt="UI Kit" width="80%" style="border-radius: 6px; border: 1px solid #ddd;" />
 
 `PixelApp` allows you to create a comprehensive UI component library by displaying all your components and screens(support soon) together in a responsive grid layout:
 
@@ -165,9 +164,9 @@ Check out the example app's `main.dart` file for a complete implementation of a 
     <td>❌ Limited or no options</td>
   </tr>
   <tr>
-    <td>Orientation switching</td>
-    <td>✅ One-click toggle</td>
-    <td>❌ Often requires restart</td>
+    <td>UI Kit view</td>
+    <td>✅ See components in a UI Kit view</td>
+    <td>❌ No UI Kit view available</td>
   </tr>
 </table>
 
