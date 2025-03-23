@@ -548,7 +548,7 @@ class _PixelPreviewState extends State<PixelPreview> {
         padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected
-              ? PixelTheme.lightBlue.withOpacity(0.2)
+              ? PixelTheme.lightBlue.withValues(alpha: 0.2)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(4),
           border: Border.all(

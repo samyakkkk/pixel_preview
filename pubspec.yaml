@@ -1,6 +1,6 @@
 name: pixel_preview
 description: "A powerful Flutter package for visualizing and testing UI components and screens in isolation across multiple device sizes."
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/samyakkkk/pixel_preview
 documentation: https://github.com/samyakkkk/pixel_preview/blob/main/README.md
 repository: https://github.com/samyakkkk/pixel_preview
