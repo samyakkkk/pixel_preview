@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:pixel_preview/utils/pixel_theme.dart';
 
-
 class FrameWidget extends StatefulWidget {
   final Widget child;
   final double initialWidth;

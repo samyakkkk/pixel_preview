@@ -81,7 +81,7 @@ class _ScreensBuilderState extends State<ScreensBuilder> {
     return LayoutBuilder(
       builder: (context, constraints) {
         // Get filtered items based on selected device type
-       
+
         // Determine columns based on selected device type
         int columns = _getColumnsForDeviceType(
             _selectedDeviceFilter, constraints.maxWidth);
@@ -119,7 +119,8 @@ class _ScreensBuilderState extends State<ScreensBuilder> {
                             setState(() {
                               _selectedDeviceFilter =
                                   selected ? deviceType : _selectedDeviceFilter;
-                              _displayScreens = _screensByDeviceType[_selectedDeviceFilter]!;
+                              _displayScreens =
+                                  _screensByDeviceType[_selectedDeviceFilter]!;
                             });
                           },
                           selectedColor: PixelTheme.lightBlue.withOpacity(0.3),

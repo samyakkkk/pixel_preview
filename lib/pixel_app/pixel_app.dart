@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pixel_preview/pixel_preview/preview_widget.dart';
 import 'package:pixel_preview/pixel_app/components_builder.dart';
+import 'package:pixel_preview/pixel_app/pixel_group.dart';
 import 'package:pixel_preview/utils/pixel_theme.dart';
 
 /// A widget that displays a collection of PixelPreview components in a grid layout.
@@ -12,35 +12,15 @@ import 'package:pixel_preview/utils/pixel_theme.dart';
 /// Screens support is coming in a future update.
 class PixelApp extends StatefulWidget {
   /// List of all widgets (currently only components are supported) to display
-  final List<Widget> widgets;
+  final List<PixelGroup> groups;
 
   /// Optional title for the app
   final String title;
 
-  /// Optional custom theme for the app
-  final ThemeData? theme;
-
-  /// Optional spacing between grid items
-  final double gridSpacing;
-
-  /// Optional number of columns for the grid on large screens
-  final int largeScreenColumns;
-
-  /// Optional number of columns for the grid on medium screens
-  final int mediumScreenColumns;
-
-  /// Optional number of columns for the grid on small screens
-  final int smallScreenColumns;
-
   const PixelApp({
     super.key,
-    required this.widgets,
+    required this.groups,
     this.title = 'Pixel Preview',
-    this.theme,
-    this.gridSpacing = 16.0,
-    this.largeScreenColumns = 3,
-    this.mediumScreenColumns = 2,
-    this.smallScreenColumns = 1,
   });
 
   @override
@@ -50,22 +30,26 @@ class PixelApp extends StatefulWidget {
 class _PixelAppState extends State<PixelApp>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final double gridSpacing = 16.0;
+  final int largeScreenColumns = 3;
+  final int mediumScreenColumns = 2;
+  final int smallScreenColumns = 1;
+  late final List<PixelGroup> componentGroups;
+  late final List<PixelGroup> screenGroups;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    
-    // Check if user has provided any screens in the init state
-    final hasScreens = widget.widgets.any((w) {
-      if (w is PixelPreview) {
-        return w.presets.isScreen;
+
+    componentGroups = widget.groups.map((group) => group.components).toList();
+    screenGroups = widget.groups.map((group) => group.screens).toList();
+
+    for (final group in screenGroups) {
+      if (group.children.isNotEmpty) {
+        debugPrint(
+            '[PixelApp] Found ${group.children.length} screen widgets in group "${group.title}", but screens are not currently supported.');
       }
-      return false;
-    });
-    
-    if (hasScreens) {
-      debugPrint('PixelApp: Screens are not currently supported. Screen widgets will be ignored.');
     }
   }
 
@@ -77,46 +61,7 @@ class _PixelAppState extends State<PixelApp>
 
   @override
   Widget build(BuildContext context) {
-    final theme = widget.theme ??
-        ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: PixelTheme.primaryBlue),
-          useMaterial3: true,
-        );
-
-    // If widgets are provided, filter them by preset type (only components are currently supported)
-    List<PixelPreview> componentWidgets =
-        List<PixelPreview>.from(widget.widgets.where((w) {
-      if (w is PixelPreview) {
-        return !w.presets.isScreen; // Component presets
-      }
-      return false;
-    }).toList());
-    
-    // Check if user has provided any screens and log a debug message
-    final screenWidgets = widget.widgets.where((w) {
-      if (w is PixelPreview) {
-        return w.presets.isScreen; // Screen presets
-      }
-      return false;
-    }).toList();
-    
-    if (screenWidgets.isNotEmpty) {
-      debugPrint('PixelApp: Found ${screenWidgets.length} screen widgets, but screens are not currently supported.');
-    }
-
-    // List<PixelPreview> screenWidgets =
-    //     List<PixelPreview>.from(widget.widgets.where((w) {
-    //   if (w is PixelPreview) {
-    //     return w.presets.isScreen; // Screen presets
-    //   }
-    //   return false;
-    // }).toList());
-
-    return MaterialApp(
-      title: widget.title,
-      theme: theme,
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
           backgroundColor: PixelTheme.primaryBlue,
@@ -132,8 +77,7 @@ class _PixelAppState extends State<PixelApp>
           //   indicatorColor: Colors.white,
           // ),
         ),
-        body: ComponentsBuilder(
-                components: componentWidgets, gridSpacing: widget.gridSpacing)
+        body: ComponentsBuilder(groups: widget.groups, gridSpacing: gridSpacing)
         // body: TabBarView(
         //   controller: _tabController,
         //   children: [
@@ -143,7 +87,6 @@ class _PixelAppState extends State<PixelApp>
         //         screens: screenWidgets, gridSpacing: widget.gridSpacing),
         //   ],
         // ),
-      ),
-    );
+        );
   }
 }

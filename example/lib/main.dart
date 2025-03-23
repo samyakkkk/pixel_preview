@@ -1,6 +1,7 @@
 import 'package:example/widgets/component.dart';
 import 'package:example/widgets/screen.dart.dart';
 import 'package:flutter/material.dart';
+import 'package:pixel_preview/pixel_app/pixel_group.dart';
 import 'package:pixel_preview/pixel_preview.dart';
 
 void main() {
@@ -65,194 +66,208 @@ class _MyAppState extends State<MyApp> {
     // PIXEL APP VIEW (DEFAULT)
     else {
       return PixelApp(
-        title: 'Pixel UI Kit',
+        title: 'Dashboard UI Kit',
         // Using a single widgets list instead of separate components and screens lists
-        widgets: [
-          // Original components
-          PixelPreview(
-            presets: ComponentPresets(
-              size: ComponentSizes.small,
-              backgroundColor: Colors.white,
-            ),
-            child: ResponsiveAppComponent(
-              title: 'Dashboard Card',
-              description: 'A responsive card component for dashboards.',
-              icon: Icons.dashboard,
-              onTap: () {},
-            ),
+        groups: [
+          PixelGroup(
+            title: 'Cards',
+            children: [
+              // Original components
+              PixelPreview(
+                presets: ComponentPresets(
+                  size: ComponentSizes.small,
+                  backgroundColor: Colors.white,
+                ),
+                child: ResponsiveAppComponent(
+                  title: 'Dashboard Card',
+                  description: 'A responsive card component for dashboards.',
+                  icon: Icons.dashboard,
+                  onTap: () {},
+                ),
+              ),
+              // PixelPreview(
+              //   presets: ComponentPresets(
+              //     size: ComponentSizes.medium,
+              //     backgroundColor: Colors.white,
+              //   ),
+              //   child: ResponsiveAppComponent(
+              //     title: 'Dashboard Card',
+              //     description: 'A responsive card component for dashboards.',
+              //     icon: Icons.dashboard,
+              //     onTap: () {},
+              //   ),
+              // ),
+              PixelPreview(
+                presets: ComponentPresets(
+                  size: ComponentSizes.large,
+                  backgroundColor: Colors.white,
+                ),
+                child: ResponsiveAppComponent(
+                  title: 'Dashboard Card',
+                  description: 'A responsive card component for dashboards.',
+                  icon: Icons.dashboard,
+                  onTap: () {},
+                ),
+              ),
+
+              // StatWidget
+              PixelPreview(
+                presets: ComponentPresets(
+                  size: ComponentSizes.medium,
+                  backgroundColor: Colors.white,
+                ),
+                child: StatWidget(
+                  primaryBlue: const Color(0xFF1A365D),
+
+                  statItems: statItems,
+                ),
+              ),
+              PixelPreview(
+                presets: ComponentPresets(
+                  size: Size(950.0, 500.0),
+                  backgroundColor: Colors.white,
+                ),
+                child: StatWidget(
+                  primaryBlue: const Color(0xFF1A365D),
+
+                  statItems: statItems,
+                ),
+              ),
+            ],
           ),
-          PixelPreview(
-            presets: ComponentPresets(
-              size: ComponentSizes.medium,
-              backgroundColor: Colors.white,
-            ),
-            child: ResponsiveAppComponent(
-              title: 'Dashboard Card',
-              description: 'A responsive card component for dashboards.',
-              icon: Icons.dashboard,
-              onTap: () {},
-            ),
-          ),
-          PixelPreview(
-            presets: ComponentPresets(
-              size: ComponentSizes.large,
-              backgroundColor: Colors.white,
-            ),
-            child: ResponsiveAppComponent(
-              title: 'Dashboard Card',
-              description: 'A responsive card component for dashboards.',
-              icon: Icons.dashboard,
-              onTap: () {},
-            ),
+          PixelGroup(
+            title: 'Utility',
+            children: [
+              // TimelineActivityCard
+              PixelPreview(
+                presets: ComponentPresets(
+                  size: ComponentSizes.medium,
+                  backgroundColor: Colors.white,
+                ),
+                child: TimelineActivityCard(
+                  coralRed: const Color(0xFFFF6B6B),
+                  lightGray: const Color(0xFFE2E8F0),
+                  activities: [
+                    {
+                      'user': 'John Doe',
+                      'action': 'created a new project',
+                      'time': '2h ago',
+                    },
+                    {
+                      'user': 'Jane Smith',
+                      'action': 'updated user settings',
+                      'time': '4h ago',
+                    },
+                    {
+                      'user': 'Mike Johnson',
+                      'action': 'uploaded new content',
+                      'time': 'Yesterday',
+                    },
+                    {
+                      'user': 'Sarah Williams',
+                      'action': 'completed onboarding',
+                      'time': 'Yesterday',
+                    },
+                  ],
+                ),
+              ),
+
+              // ActivityCard
+              PixelPreview(
+                presets: ComponentPresets(
+                  size: ComponentSizes.medium,
+                  backgroundColor: Colors.white,
+                ),
+                child: ActivityCard(
+                  lightBlue: const Color(0xFF4299E1),
+                  activity: {
+                    'user': 'John Doe',
+                    'action': 'created a new project',
+                    'time': '2 hours ago',
+                  },
+                ),
+              ),
+
+              // BottomNav widget
+              PixelPreview(
+                presets: ComponentPresets(
+                  size: ComponentSizes.large,
+                  backgroundColor: Colors.white,
+                ),
+                child: BottomNav(
+                  lightBlue: const Color(0xFF4299E1),
+                  selectedIndex: 0,
+                  updateIndex: (index) {},
+                ),
+              ),
+
+              // QuickAction
+              PixelPreview(
+                presets: ComponentPresets(
+                  size: ComponentSizes.small,
+                  backgroundColor: Colors.white,
+                ),
+                child: QuickAction(
+                  action: {
+                    'icon': Icons.add_circle,
+                    'label': 'New Project',
+                    'color': const Color(0xFF4FD1C5),
+                  },
+                ),
+              ),
+            ],
+
+            // Original screens [Currently not supported]
+            // PixelPreview(
+            //   presets: ScreenPresets(deviceType: DeviceType.iPhone16),
+            //   child: ResponsiveScreen(
+            //     title: "Dashboard",
+            //     key: const ValueKey("DASHBOARD"),
+            //   ),
+            // ),
+            // PixelPreview(
+            //   key: const ValueKey("ANALYTICS"),
+            //   presets: ScreenPresets(deviceType: DeviceType.iPad),
+            //   child: ResponsiveScreen(title: "Analytics"),
+            // ),
+            // PixelPreview(
+            //   key: const ValueKey("USER PROFILE"),
+            //   presets: ScreenPresets(
+            //     deviceType: DeviceType.desktop,
+            //     isLandscape: true,
+            //   ),
+            //   child: ResponsiveScreen(title: "User Profile"),
+            // ),
+            // PixelPreview(
+            //   presets: ComponentPresets(),
+            //   child: NavigationItems(
+            //     items: [
+            //       {'icon': Icons.dashboard, 'label': 'Dashboard'},
+            //       {'icon': Icons.analytics, 'label': 'Analytics'},
+            //       {'icon': Icons.people, 'label': 'Users'},
+            //       {'icon': Icons.folder, 'label': 'Projects'},
+            //       {'icon': Icons.message, 'label': 'Messages'},
+            //     ],
+            //     selectedIndex: 0,
+            //     isCompact: true,
+            //     updateSelectedIndex: (_) {},
+            //   ),
+            // ),
           ),
 
-          // StatWidget
-          PixelPreview(
-            presets: ComponentPresets(
-              size: ComponentSizes.medium,
-              backgroundColor: Colors.white,
-            ),
-            child: StatWidget(
-              primaryBlue: const Color(0xFF1A365D),
-
-              statItems: statItems,
-            ),
-          ),
-          PixelPreview(
-            presets: ComponentPresets(
-              size: Size(950.0, 500.0),
-              backgroundColor: Colors.white,
-            ),
-            child: StatWidget(
-              primaryBlue: const Color(0xFF1A365D),
-
-              statItems: statItems,
-            ),
-          ),
-
-          // ActivityCard
-          PixelPreview(
-            presets: ComponentPresets(
-              size: ComponentSizes.medium,
-              backgroundColor: Colors.white,
-            ),
-            child: ActivityCard(
-              lightBlue: const Color(0xFF4299E1),
-              activity: {
-                'user': 'John Doe',
-                'action': 'created a new project',
-                'time': '2 hours ago',
-              },
-            ),
-          ),
-
-          // Newly created widgets from screen.dart.dart
-          // UserAvatar widget
-          PixelPreview(
-            presets: ComponentPresets(
-              size: ComponentSizes.small,
-              backgroundColor: Colors.white,
-            ),
-            child: UserAvatar(lightBlue: const Color(0xFF4299E1)),
-          ),
-
-          // BottomNav widget
-          PixelPreview(
-            presets: ComponentPresets(
-              size: ComponentSizes.large,
-              backgroundColor: Colors.white,
-            ),
-            child: BottomNav(
-              lightBlue: const Color(0xFF4299E1),
-              selectedIndex: 0,
-              updateIndex: (index) {},
-            ),
-          ),
-
-          // TimelineActivityCard
-          PixelPreview(
-            presets: ComponentPresets(
-              size: ComponentSizes.medium,
-              backgroundColor: Colors.white,
-            ),
-            child: TimelineActivityCard(
-              coralRed: const Color(0xFFFF6B6B),
-              lightGray: const Color(0xFFE2E8F0),
-              activities: [
-                {
-                  'user': 'John Doe',
-                  'action': 'created a new project',
-                  'time': '2h ago',
-                },
-                {
-                  'user': 'Jane Smith',
-                  'action': 'updated user settings',
-                  'time': '4h ago',
-                },
-                {
-                  'user': 'Mike Johnson',
-                  'action': 'uploaded new content',
-                  'time': 'Yesterday',
-                },
-                {
-                  'user': 'Sarah Williams',
-                  'action': 'completed onboarding',
-                  'time': 'Yesterday',
-                },
-              ],
-            ),
-          ),
-
-          // QuickAction
-          PixelPreview(
-            presets: ComponentPresets(
-              size: ComponentSizes.small,
-              backgroundColor: Colors.white,
-            ),
-            child: QuickAction(
-              action: {
-                'icon': Icons.add_circle,
-                'label': 'New Project',
-                'color': const Color(0xFF4FD1C5),
-              },
-            ),
-          ),
-
-          // Original screens
-          PixelPreview(
-            presets: ScreenPresets(deviceType: DeviceType.iPhone16),
-            child: ResponsiveScreen(
-              title: "Dashboard",
-              key: const ValueKey("DASHBOARD"),
-            ),
-          ),
-          PixelPreview(
-            key: const ValueKey("ANALYTICS"),
-            presets: ScreenPresets(deviceType: DeviceType.iPad),
-            child: ResponsiveScreen(title: "Analytics"),
-          ),
-          PixelPreview(
-            key: const ValueKey("USER PROFILE"),
-            presets: ScreenPresets(
-              deviceType: DeviceType.desktop,
-              isLandscape: true,
-            ),
-            child: ResponsiveScreen(title: "User Profile"),
-          ),
-          PixelPreview(
-            presets: ComponentPresets(),
-            child: NavigationItems(
-              items: [
-                {'icon': Icons.dashboard, 'label': 'Dashboard'},
-                {'icon': Icons.analytics, 'label': 'Analytics'},
-                {'icon': Icons.people, 'label': 'Users'},
-                {'icon': Icons.folder, 'label': 'Projects'},
-                {'icon': Icons.message, 'label': 'Messages'},
-              ],
-              selectedIndex: 0,
-              isCompact: true,
-              updateSelectedIndex: (_) {},
-            ),
+          PixelGroup(
+            title: "Avatars",
+            children: [
+              // Newly created widgets from screen.dart.dart
+              // UserAvatar widget
+              PixelPreview(
+                presets: ComponentPresets(
+                  size: ComponentSizes.small,
+                  backgroundColor: Colors.white,
+                ),
+                child: UserAvatar(lightBlue: const Color(0xFF4299E1)),
+              ),
+            ],
           ),
         ],
       );

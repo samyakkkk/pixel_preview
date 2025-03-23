@@ -103,7 +103,7 @@ class _PixelPreviewState extends State<PixelPreview> {
       _currentDevice = screenPresets.deviceName;
     }
 
-    if (widget.thumbnailMode){
+    if (widget.thumbnailMode) {
       _sidebarExpanded = false;
     }
   }
@@ -253,8 +253,6 @@ class _PixelPreviewState extends State<PixelPreview> {
       ),
     );
   }
-
-
 
   Widget _buildComponentSidebar() {
     return Column(
@@ -484,11 +482,8 @@ class _PixelPreviewState extends State<PixelPreview> {
     double width = size.width;
     double height = size.height;
     // Check if dimensions match in either orientation
-    bool isSelected =
-        (_width == width && _height == height) ||
-            (_width == height &&
-                _height == width.toDouble() &&
-                _isLandscape);
+    bool isSelected = (_width == width && _height == height) ||
+        (_width == height && _height == width.toDouble() && _isLandscape);
 
     return InkWell(
       onTap: () {
@@ -573,15 +568,14 @@ class _PixelPreviewState extends State<PixelPreview> {
             width: 1,
           ),
         ),
-        child:Text(
-              label,
-              style: TextStyle(
-                color: isSelected
-                    ? PixelTheme.primaryBlue
-                    : PixelTheme.secondaryText,
-                fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
-              ),
-            ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color:
+                isSelected ? PixelTheme.primaryBlue : PixelTheme.secondaryText,
+            fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
+          ),
+        ),
       ),
     );
   }

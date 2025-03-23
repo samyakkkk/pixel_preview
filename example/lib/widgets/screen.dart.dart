@@ -183,8 +183,12 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
       {'icon': Icons.folder, 'label': 'Projects'},
       {'icon': Icons.message, 'label': 'Messages'},
     ];
-    return NavigationItems(items: items, selectedIndex: _selectedIndex, isCompact: isCompact, updateSelectedIndex: (index)=>setState(() => _selectedIndex = index));
-
+    return NavigationItems(
+      items: items,
+      selectedIndex: _selectedIndex,
+      isCompact: isCompact,
+      updateSelectedIndex: (index) => setState(() => _selectedIndex = index),
+    );
   }
 
   Widget _buildMainContent(
@@ -262,10 +266,7 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
       },
     ];
 
-    return StatWidget(
-      statItems: statItems,
-      primaryBlue: primaryBlue,
-    );
+    return StatWidget(statItems: statItems, primaryBlue: primaryBlue);
   }
 
   Widget _buildComponentsSection(
@@ -449,12 +450,10 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
     ];
 
     return TimelineActivityCard(
-          
-          coralRed: coralRed,
-          lightGray: lightGray,
-          activities: activities,
-  
-        );
+      coralRed: coralRed,
+      lightGray: lightGray,
+      activities: activities,
+    );
   }
 
   Widget _buildQuickActions() {
@@ -474,21 +473,22 @@ class _ResponsiveScreenState extends State<ResponsiveScreen> {
   }
 }
 
-class NavigationItems extends StatelessWidget{
-  const NavigationItems({super.key, 
+class NavigationItems extends StatelessWidget {
+  const NavigationItems({
+    super.key,
     required this.items,
     required this.selectedIndex,
     required this.isCompact,
-    required this.updateSelectedIndex
+    required this.updateSelectedIndex,
   });
-  
+
   final List items;
   final int selectedIndex;
   final bool isCompact;
   final Function(int) updateSelectedIndex;
   @override
   Widget build(BuildContext context) {
-   return  ListView.builder(
+    return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: items.length,
@@ -541,7 +541,6 @@ class NavigationItems extends StatelessWidget{
       },
     );
   }
-
 }
 
 class QuickAction extends StatelessWidget {
@@ -569,17 +568,15 @@ class QuickAction extends StatelessWidget {
 class TimelineActivityCard extends StatelessWidget {
   const TimelineActivityCard({
     super.key,
-  
+
     required this.coralRed,
     required this.lightGray,
     required this.activities,
   });
 
-
   final Color coralRed;
   final Color lightGray;
   final List<Map<String, String>> activities;
-
 
   @override
   Widget build(BuildContext context) {
@@ -705,7 +702,7 @@ class StatWidget extends StatelessWidget {
         // Determine grid properties based on available width
         int crossAxisCount;
         double childAspectRatio;
-        
+
         if (constraints.maxWidth < 400) {
           crossAxisCount = 1;
           childAspectRatio = 2.0;
@@ -745,7 +742,7 @@ class StatWidget extends StatelessWidget {
                     final iconSize = isCompact ? 20.0 : 28.0;
                     final valueSize = isCompact ? 18.0 : 24.0;
                     final labelSize = isCompact ? 12.0 : 14.0;
-                    
+
                     return Row(
                       children: [
                         Expanded(
@@ -794,8 +791,8 @@ class StatWidget extends StatelessWidget {
     );
   }
 }
-class BottomNav extends StatelessWidget {
 
+class BottomNav extends StatelessWidget {
   const BottomNav({
     super.key,
     required this.lightBlue,
