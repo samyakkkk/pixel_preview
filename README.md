@@ -62,7 +62,7 @@ Wrap any widget with `PixelPreview` and use `ComponentPresets` to create an inte
 ```dart
 PixelPreview(
   presets: ComponentPresets(),
-  child: YourCustomWidget(),
+  child: CardWidget(),
 )
 ```
 
@@ -76,7 +76,7 @@ PixelPreview(
   presets: ScreenPresets(
     deviceType: DeviceType.iPhone16,  // Choose from various device types
   ),
-  child: YourScreenWidget(),
+  child: LoginScreen(),
 )
 ```
 
@@ -86,68 +86,50 @@ PixelPreview is automatically disabled in release mode, but you can explicitly c
 
 ```dart
 PixelPreview(
-  presets: ComponentPresets(),
-  enabled: kDebugMode, // Only enabled in debug mode
-  child: YourWidget(),
-)
-```
-
-## 📚 Example
-
-Check out the `/example` folder for a complete implementation showing both component and screen previews:
-
-```dart
-// Component example with predefined size
-PixelPreview(
   presets: ComponentPresets(
     size: ComponentSizes.medium,
-    backgroundColor: Colors.white,
   ),
-  child: ResponsiveAppComponent(
-    title: 'Feature Card',
-    description: 'A responsive component that adapts to various constraint sizes.',
-    icon: Icons.star,
-    onTap: () {},
-  ),
-)
-
-// Component example with custom size
-PixelPreview(
-  presets: ComponentPresets(
-    size: Size(500, 250),
-    backgroundColor: const Color(0xFFF5F5F5),
-  ),
-  child: ResponsiveAppComponent(
-    title: 'Analytics Widget',
-    description: 'Data visualization component with responsive layout.',
-    icon: Icons.analytics,
-    onTap: () {},
-  ),
-)
-
-// Screen example
-PixelPreview(
-  presets: ScreenPresets(
-    deviceType: DeviceType.iPhone16,
-    isLandscape: true,
-  ),
-  child: ResponsiveScreen(
-    title: "Dashboard",
-  ),
+  enabled: kDebugMode, // Only enabled in debug mode
+  child: CardWidget(),
 )
 ```
 
 ### Creating a UI Component Library with PixelApp
+<p align="center">
+  <img src="./media/uikit.png" alt="UI Kit" width="80%" style="border-radius: 6px; border: 1px solid #ddd;" />
+</p>
 
-PixelApp allows you to create a comprehensive UI component library by displaying all your components and screens together in a responsive grid layout:
+`PixelApp` allows you to create a comprehensive UI component library by displaying all your components and screens(support soon) together in a responsive grid layout:
 
 ```dart
 PixelApp(
   title: 'My UI Kit',
-  widgets: [
-    // Add your components and screens here
-    PixelPreview(...),
-    PixelPreview(...),
+  groups: [
+    // Add your card components here
+    PixelGroup(
+      title: 'Cards',
+      children: [
+        PixelPreview(
+          presets: ComponentPresets(
+            size: ComponentSizes.medium,
+          ),
+          child: CardWidget(),
+        ),
+        // other card widgets
+      ],
+    ),
+    PixelGroup(
+      title: 'Buttons',
+      children: [
+        PixelPreview(
+          presets: ComponentPresets(
+            size: ComponentSizes.medium,
+          ),
+          child: ButtonWidget(),
+        ),
+        // other button widgets
+      ],
+    ),
   ],
 )
 ```
@@ -204,4 +186,6 @@ This package is available under the [LICENSE](LICENSE) included in the repositor
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Hi! I'm Samyak. I'm actively developing this package and am going to add AI based UI generation features as well soon! Do give the package a like and create an [issue](https://github.com/samyakkkk/pixel_preview) to share your feedback!
+
+All contributions are warmly welcome!
