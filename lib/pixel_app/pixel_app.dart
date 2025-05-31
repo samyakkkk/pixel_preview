@@ -66,27 +66,8 @@ class _PixelAppState extends State<PixelApp>
           title: Text(widget.title),
           backgroundColor: PixelTheme.primaryBlue,
           foregroundColor: Colors.white,
-          // bottom: TabBar(
-          //   controller: _tabController,
-          //   tabs: const [
-          //     Tab(text: 'Components', icon: Icon(Icons.widgets)),
-          //     Tab(text: 'Screens', icon: Icon(Icons.phone_android)),
-          //   ],
-          //   labelColor: Colors.white,
-          //   unselectedLabelColor: Colors.white70,
-          //   indicatorColor: Colors.white,
-          // ),
         ),
-        body: ComponentsBuilder(groups: widget.groups, gridSpacing: gridSpacing)
-        // body: TabBarView(
-        //   controller: _tabController,
-        //   children: [
-        //     ComponentsBuilder(
-        //         components: componentWidgets, gridSpacing: widget.gridSpacing),
-        //     ScreensBuilder(
-        //         screens: screenWidgets, gridSpacing: widget.gridSpacing),
-        //   ],
-        // ),
+        body: GridBuilder(groups: widget.groups, gridSpacing: gridSpacing)
         );
   }
 }

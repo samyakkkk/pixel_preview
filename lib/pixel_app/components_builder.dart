@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:pixel_preview/pixel_app/common_widgets.dart';
 import 'package:pixel_preview/pixel_app/pixel_group.dart';
+import 'package:pixel_preview/utils/presets.dart';
 
-class ComponentsBuilder extends StatefulWidget {
+class GridBuilder extends StatefulWidget {
   final List<PixelGroup> groups;
   final double gridSpacing;
 
-  const ComponentsBuilder(
+  const GridBuilder(
       {super.key, required this.groups, required this.gridSpacing});
 
   @override
-  State<ComponentsBuilder> createState() => _ComponentsBuilderState();
+  State<GridBuilder> createState() => _GridBuilderState();
 }
 
-class _ComponentsBuilderState extends State<ComponentsBuilder> {
+class _GridBuilderState extends State<GridBuilder> {
   final double gridSpacing = 16.0;
 
   @override
@@ -22,13 +23,13 @@ class _ComponentsBuilderState extends State<ComponentsBuilder> {
       builder: (context, constraints) {
         // For components, use the original grid layout
         int columns = 2;
-        if (constraints.maxWidth >= 1200) {
+        if (constraints.maxWidth >= 1600) {
+          columns = 5;
+        } else if (constraints.maxWidth >= 1200) {
           columns = 4;
         } else if (constraints.maxWidth >= 800) {
           columns = 3;
         }
-
-        double aspectRatio = 1.5; // Component aspect ratio
 
         // If we have groups, display them in a scrollable list
 
@@ -38,7 +39,7 @@ class _ComponentsBuilderState extends State<ComponentsBuilder> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ...widget.groups.map(
-                  (group) => _buildGroupSection(group, columns, aspectRatio)),
+                  (group) => _buildGroupSection(group, columns)),
             ],
           ),
         );
@@ -47,7 +48,9 @@ class _ComponentsBuilderState extends State<ComponentsBuilder> {
   }
 
   // Helper method to build a group section
-  Widget _buildGroupSection(PixelGroup group, int columns, double aspectRatio) {
+  Widget _buildGroupSection(PixelGroup group, int columns) {
+
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 24.0),
       child: Column(
@@ -72,7 +75,7 @@ class _ComponentsBuilderState extends State<ComponentsBuilder> {
               crossAxisCount: columns,
               crossAxisSpacing: widget.gridSpacing,
               mainAxisSpacing: widget.gridSpacing,
-              childAspectRatio: aspectRatio,
+              childAspectRatio: group.preset.aspectRatio,
             ),
             itemCount: group.children.length,
             itemBuilder: (context, index) {

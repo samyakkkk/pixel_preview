@@ -1,4 +1,5 @@
 import 'package:pixel_preview/pixel_preview/preview_widget.dart';
+import 'package:pixel_preview/utils/presets.dart';
 
 /// This allows for organizing components into logical sections within a PixelApp.
 class PixelGroup {
@@ -8,15 +9,18 @@ class PixelGroup {
   /// The list of widgets to display in this group
   final List<PixelPreview> children;
 
+  /// The group preset for displaying grids
+  final Presets preset;
+
   /// Creates a new PixelGroup.
   ///
   /// The [title] parameter is required and will be displayed as the group header.
   /// The [children] parameter should contain the widgets to display in this group,
   /// typically PixelPreview widgets.
-  const PixelGroup({
-    required this.title,
-    required this.children,
-  });
+  const PixelGroup(
+      {required this.title,
+      required this.children,
+      this.preset = const ScreenPresets(deviceType: DeviceType.iPhone16)});
 
   PixelGroup get components {
     return PixelGroup(

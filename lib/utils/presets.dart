@@ -17,6 +17,8 @@ abstract class Presets {
 
   /// Get the initial background color
   Color get backgroundColor => Colors.white;
+
+  double get aspectRatio ;
 }
 
 /// Preset configuration for component previews
@@ -41,6 +43,9 @@ class ComponentPresets extends Presets {
 
   @override
   double get initialHeight => size.height;
+
+  @override
+  double get aspectRatio => size.width/size.height;
 }
 
 /// Preset configuration for screen previews
@@ -75,4 +80,7 @@ class ScreenPresets extends Presets {
 
   /// Get the device name
   String get deviceName => DeviceDimensions.dimensions[deviceType]!['name'];
+
+  @override
+  double get aspectRatio => initialWidth/initialHeight;
 }
