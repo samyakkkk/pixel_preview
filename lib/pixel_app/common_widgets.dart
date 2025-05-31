@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:pixel_preview/pixel_preview/preview_widget.dart';
 import 'package:pixel_preview/utils/pixel_theme.dart';
@@ -64,19 +66,37 @@ class GridItem extends StatelessWidget {
         presets: child.presets,
         enabled: child.enabled,
         thumbnailMode: true,
-        child: child.child, // Force thumbnail mode
+        child: child.child,
       );
     }
 
-    return Card(
-      elevation: 2,
-      margin: EdgeInsets.all(gridSpacing / 2),
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: PixelTheme.lightGray, width: 1),
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+              appBar: AppBar(
+                title: Text(child.presets.isScreen
+                    ? 'Screen Preview'
+                    : 'Component Preview'),
+                backgroundColor: PixelTheme.primaryBlue,
+                foregroundColor: Colors.white,
+              ),
+              body: child,
+            ),
+          ),
+        );
+      },
+      child: Card(
+        elevation: 2,
+        margin: EdgeInsets.all(gridSpacing / 2),
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(color: PixelTheme.lightGray, width: 1),
+        ),
+        child: IgnorePointer(child: thumbnailChild),
       ),
-      child: thumbnailChild,
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pixel_preview/pixel_preview/frame_widget.dart';
-import 'package:pixel_preview/pixel_preview/screenshot_thumbnail.dart';
 import 'package:pixel_preview/utils/pixel_theme.dart';
 import 'package:pixel_preview/utils/presets.dart';
 import 'package:pixel_preview/utils/sizes.dart';
@@ -110,11 +109,6 @@ class _PixelPreviewState extends State<PixelPreview> {
       return widget.child;
     }
 
-    // If thumbnail mode is enabled, return a simplified version without the sidebar
-    if (widget.thumbnailMode) {
-      return _buildThumbnailView();
-    }
-
     // Determine if we're in a mobile view
     final screenSize = MediaQuery.of(context).size;
     final isTablet = screenSize.width >= 600 && screenSize.width < 1024;
@@ -177,66 +171,67 @@ class _PixelPreviewState extends State<PixelPreview> {
                     child: widget.child,
                   ),
                 ),
-
-                // Sidebar toggle button (visible on all devices)
-                Positioned(
-                  top: 16,
-                  right: 16,
-                  child: FloatingActionButton(
-                    mini: true,
-                    backgroundColor: PixelTheme.primaryBlue,
-                    child: Icon(
-                      _sidebarExpanded
-                          ? Icons.chevron_right
-                          : Icons.chevron_left,
-                      color: Colors.white,
+                if (!widget.thumbnailMode)
+                  // Sidebar toggle button (visible on all devices)
+                  Positioned(
+                    top: 16,
+                    right: 16,
+                    child: FloatingActionButton(
+                      mini: true,
+                      backgroundColor: PixelTheme.primaryBlue,
+                      child: Icon(
+                        _sidebarExpanded
+                            ? Icons.chevron_right
+                            : Icons.chevron_left,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _sidebarExpanded = !_sidebarExpanded;
+                        });
+                      },
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _sidebarExpanded = !_sidebarExpanded;
-                      });
-                    },
                   ),
-                ),
               ],
             ),
           ),
 
-          // Right sidebar
-          AnimatedContainer(
-            duration: Duration(milliseconds: 300),
-            width: _sidebarExpanded ? (isTablet ? 280 : 320) : 0,
-            child: _sidebarExpanded
-                ? Container(
-                    margin: EdgeInsets.all(8),
-                    decoration: PixelTheme.cardDecoration,
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Component Options",
-                            style: PixelTheme.titleTextStyle,
-                          ),
-                          SizedBox(height: 16),
-                          Divider(),
-                          SizedBox(height: 8),
-
-                          // Scrollable content area
-                          Expanded(
-                            child: SingleChildScrollView(
-                              child: widget.presets.isScreen
-                                  ? _buildScreenSidebar()
-                                  : _buildComponentSidebar(),
+          if (!widget.thumbnailMode)
+            // Right sidebar
+            AnimatedContainer(
+              duration: Duration(milliseconds: 300),
+              width: _sidebarExpanded ? (isTablet ? 280 : 320) : 0,
+              child: _sidebarExpanded
+                  ? Container(
+                      margin: EdgeInsets.all(8),
+                      decoration: PixelTheme.cardDecoration,
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Component Options",
+                              style: PixelTheme.titleTextStyle,
                             ),
-                          ),
-                        ],
+                            SizedBox(height: 16),
+                            Divider(),
+                            SizedBox(height: 8),
+
+                            // Scrollable content area
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: widget.presets.isScreen
+                                    ? _buildScreenSidebar()
+                                    : _buildComponentSidebar(),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  )
-                : null,
-          ),
+                    )
+                  : null,
+            ),
         ],
       ),
     );
@@ -328,44 +323,6 @@ class _PixelPreviewState extends State<PixelPreview> {
         Text('Drag the handles to resize the component.',
             style: PixelTheme.bodyTextStyle),
       ],
-    );
-  }
-
-  /// Builds a simplified view for thumbnail mode without the sidebar
-  Widget _buildThumbnailView() {
-    // Use actual widget size for rendering
-    double renderWidth = widget.presets.initialWidth;
-    double renderHeight = widget.presets.initialHeight;
-
-    return ScreenshotThumbnailBuilder(
-      key: widget.key,
-      backgroundColor: _backgroundColor,
-      renderWidth: renderWidth,
-      renderHeight: renderHeight,
-      // thumbnailWidth: thumbnailWidth,
-      // thumbnailHeight: thumbnailHeight,
-      onTap: () {
-        // Open the full preview when thumbnail is tapped
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => Scaffold(
-              appBar: AppBar(
-                title: Text(widget.presets.isScreen
-                    ? 'Screen Preview'
-                    : 'Component Preview'),
-                backgroundColor: PixelTheme.primaryBlue,
-              ),
-              body: PixelPreview(
-                key: widget.key,
-                presets: widget.presets,
-                thumbnailMode: false,
-                child: widget.child, // Full preview mode
-              ),
-            ),
-          ),
-        );
-      },
-      child: widget.child,
     );
   }
 
