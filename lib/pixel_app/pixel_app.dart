@@ -30,10 +30,7 @@ class PixelApp extends StatefulWidget {
 class _PixelAppState extends State<PixelApp>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final double gridSpacing = 16.0;
-  final int largeScreenColumns = 3;
-  final int mediumScreenColumns = 2;
-  final int smallScreenColumns = 1;
+  final double gridSpacing = 24.0;
   late final List<PixelGroup> componentGroups;
   late final List<PixelGroup> screenGroups;
 

@@ -113,37 +113,6 @@ class _PixelPreviewState extends State<PixelPreview> {
     final screenSize = MediaQuery.of(context).size;
     final isTablet = screenSize.width >= 600 && screenSize.width < 1024;
     final isMobile = screenSize.width < 600;
-    if (isMobile) {
-      return Scaffold(
-        backgroundColor: PixelTheme.canvasBackground,
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.screen_lock_portrait,
-                  size: 50,
-                  color: PixelTheme.primaryText,
-                ),
-                SizedBox(
-                  height: 16,
-                ),
-                Text(
-                  'Please switch to landscape mode to use Pixel Preview.',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(color: PixelTheme.primaryText),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
 
     return Scaffold(
       backgroundColor: PixelTheme.canvasBackground,
@@ -171,7 +140,7 @@ class _PixelPreviewState extends State<PixelPreview> {
                     child: widget.child,
                   ),
                 ),
-                if (!widget.thumbnailMode)
+                if (!(widget.thumbnailMode || isMobile))
                   // Sidebar toggle button (visible on all devices)
                   Positioned(
                     top: 16,
@@ -192,11 +161,12 @@ class _PixelPreviewState extends State<PixelPreview> {
                       },
                     ),
                   ),
+             
               ],
             ),
           ),
 
-          if (!widget.thumbnailMode)
+          if (!(widget.thumbnailMode || isMobile))
             // Right sidebar
             AnimatedContainer(
               duration: Duration(milliseconds: 300),

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:pixel_preview/pixel_preview/preview_widget.dart';
 import 'package:pixel_preview/utils/pixel_theme.dart';
@@ -87,16 +85,8 @@ class GridItem extends StatelessWidget {
           ),
         );
       },
-      child: Card(
-        elevation: 2,
-        margin: EdgeInsets.all(gridSpacing / 2),
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: PixelTheme.lightGray, width: 1),
-        ),
-        child: IgnorePointer(child: thumbnailChild),
-      ),
+      child:  IgnorePointer(child: thumbnailChild),
+      
     );
   }
 }

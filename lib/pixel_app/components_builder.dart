@@ -52,13 +52,13 @@ class _GridBuilderState extends State<GridBuilder> {
 
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 24.0),
+      padding: const EdgeInsets.only(bottom: 24.0, left: 8.0, right: 8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Group title
           Padding(
-            padding: const EdgeInsets.only(bottom: 16.0, top: 8.0, left: 8.0),
+            padding: const EdgeInsets.only(bottom: 16.0, top: 8.0),
             child: Text(
               group.title,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
