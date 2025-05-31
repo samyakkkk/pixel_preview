@@ -47,17 +47,20 @@ class PixelPreview extends StatefulWidget {
   /// whether this is a component or screen preview
   final Presets presets;
 
+  final String name;
+
   /// Creates a PixelPreview widget.
   ///
   /// The type of preset [ComponentPresets] or [ScreenPresets] determines
   /// whether this is a component or screen preview
-  const PixelPreview({
-    super.key,
-    required this.child,
-    required this.presets,
-    this.enabled = !kReleaseMode,
-    this.thumbnailMode = false,
-  });
+  PixelPreview(
+      {super.key,
+      required this.child,
+      required this.presets,
+      this.enabled = !kReleaseMode,
+      this.thumbnailMode = false,
+      String? name})
+      : name = name ?? child.toString();
   @override
   State<PixelPreview> createState() => _PixelPreviewState();
 }
@@ -161,7 +164,6 @@ class _PixelPreviewState extends State<PixelPreview> {
                       },
                     ),
                   ),
-             
               ],
             ),
           ),
