@@ -86,7 +86,7 @@ class GridItem extends StatelessWidget {
           ),
         );
       },
-      child: IgnorePointer(child: thumbnailChild),
+      child: IgnorePointer(child: thumbnailChild, ignoring: false,),
     );
   }
 }

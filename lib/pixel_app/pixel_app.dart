@@ -17,21 +17,29 @@ class PixelApp extends StatelessWidget {
   /// Optional title for the app
   final String title;
 
+  /// Whether PixelApp is displayed within an iframe in your website.
+  final bool iFrameMode;
+
   final double gridSpacing = 24.0;
   const PixelApp({
     super.key,
     required this.groups,
     this.title = 'Pixel Preview',
+    this.iFrameMode = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(title),
-          backgroundColor: PixelTheme.primaryBlue,
-          foregroundColor: Colors.white,
-        ),
-        body: GridBuilder(groups: groups, gridSpacing: gridSpacing));
+        appBar: !iFrameMode
+            ? AppBar(
+                title: Text(title),
+                backgroundColor: PixelTheme.primaryBlue,
+                foregroundColor: Colors.white,
+              )
+            : null,
+        body: IframeGridBuilder(
+          groups: groups,
+        ));
   }
 }
