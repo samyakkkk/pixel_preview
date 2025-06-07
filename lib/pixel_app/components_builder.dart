@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pixel_preview/pixel_app/common_widgets.dart';
 import 'package:pixel_preview/pixel_app/pixel_group.dart';
-import 'package:pixel_preview/utils/presets.dart';
 
 class IframeGridBuilder extends StatefulWidget {
   final List<PixelGroup> groups;

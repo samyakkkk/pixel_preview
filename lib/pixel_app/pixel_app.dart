@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pixel_preview/pixel_app/components_builder.dart';
 import 'package:pixel_preview/pixel_app/pixel_group.dart';
-import 'package:pixel_preview/pixel_thumbnail/thumbnail_builder.dart';
 import 'package:pixel_preview/utils/pixel_theme.dart';
 
 /// A widget that displays a collection of PixelPreview components in a grid layout.

@@ -1,31 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:pixel_preview/pixel_app/pixel_group.dart';
 import 'package:pixel_preview/pixel_preview/preview_widget.dart'; // Added for PixelPreview
-import 'package:pixel_preview/utils/presets.dart';
 
-class ThumbnailBuilder extends StatelessWidget {
-  final List<PixelPreview> groups;
-  final Size canvasSize;
-  final int maxScreensOverlay;
-  final double targetScreenPercentageOfCanvas;
-  final Offset baseOffset;
-  final Offset staggerOffset; // Not used in current centered logic
+class SlantingThumbnailBuilder extends StatelessWidget {
+  final List<PixelPreview> screens;
 
-  const ThumbnailBuilder({
-    super.key,
-    required this.groups,
-    required this.canvasSize,
-    this.maxScreensOverlay = 3, // We'll now potentially use up to 3 screens
-    this.targetScreenPercentageOfCanvas = 0.8,
-    this.baseOffset = const Offset(100, 100),
-    this.staggerOffset = const Offset(250, 250),
-  });
+  final bool lenientLayout = true;
+
+  const SlantingThumbnailBuilder({super.key, required this.screens});
 
   @override
   Widget build(BuildContext context) {
-    List<PixelPreview> screenWidgets = [];
-    List<Presets> screenPresets = [];
-    const double screenSpacing = 10.0; // Spacing between screens
     return LayoutBuilder(builder: (context, constraints) {
       final screenRatio = constraints.maxWidth / constraints.maxHeight;
       final ratio = 1.66;
@@ -46,13 +30,6 @@ class ThumbnailBuilder extends StatelessWidget {
             width: width,
             child: LayoutBuilder(builder: (context, constraints) {
               return Stack(children: [
-                // Positioned(
-                //     left: constraints.maxHeight * 0.1,
-                //     top: constraints.maxHeight * 0.1,
-                //     child: Image.network(
-                //       'https://cdn-images-1.medium.com/v2/resize:fit:1200/1*KKM72hHVmUGEP4kD3GffbQ.jpeg',
-                //       height: constraints.maxHeight * 0.2,
-                //     )),
                 Positioned(
                     left: constraints.maxHeight * 0.1,
                     top: constraints.maxHeight * 0.1,
@@ -60,16 +37,12 @@ class ThumbnailBuilder extends StatelessWidget {
                       'https://upload.wikimedia.org/wikipedia/commons/1/17/Google-flutter-logo.png',
                       height: constraints.maxHeight * 0.1,
                     )),
-
                 _buildColumn(
-                    groups.sublist(0, 2), constraints.maxHeight, -0.3, 0),
+                    screens.sublist(0, 2), constraints.maxHeight, -0.3, 0),
                 _buildColumn(
-                    groups.sublist(2,4), constraints.maxHeight, -0.5, 1),
+                    screens.sublist(2, 4), constraints.maxHeight, -0.5, 1),
                 _buildColumn(
-                    groups.sublist(4, 5), constraints.maxHeight, 0.38, 2)
-
-                // ..._buildColumn(
-                //     groups[0].children, constraints.maxHeight, 0.3, 3),
+                    screens.sublist(4, 5), constraints.maxHeight, 0.38, 2)
               ]);
             })),
       );
@@ -78,49 +51,46 @@ class ThumbnailBuilder extends StatelessWidget {
 
   Widget _buildColumn(List<PixelPreview> widgets, double maxHeight,
       double startingPoint, int columnIndex) {
-    final deviceHeightRatio = 0.9;
-    final paddingRatio = 0.02;
-    final totalRatio = deviceHeightRatio + (2 * paddingRatio);
+    final deviceHeightRatio = lenientLayout ? 1.0 : 0.9;
+    final paddingRatio = lenientLayout ? 0.03 : 0.02;
+
     final deviceHeight = maxHeight * deviceHeightRatio;
     final deviceWidth = deviceHeight * widgets[0].presets.aspectRatio;
     final devicePadding = maxHeight * paddingRatio;
     final deviceBorder = maxHeight * 0.025;
-    late double leftStartingPoint;
+    double leftStartingPoint = maxHeight * (lenientLayout ? 0.32 : 0.34);
+
     switch (columnIndex) {
       case 0:
-        leftStartingPoint = maxHeight * 0.34;
+        leftStartingPoint = leftStartingPoint;
         break;
       case 1:
-        leftStartingPoint = maxHeight * 0.34 +
+        leftStartingPoint = leftStartingPoint +
             (columnIndex * (deviceWidth + devicePadding) * 1.635);
         break;
       case 2:
-        leftStartingPoint = maxHeight * 0.34 +
-            (columnIndex * (deviceWidth + devicePadding)) * 1.15;
-      default:
-        leftStartingPoint = maxHeight * 0.34;
+        leftStartingPoint = leftStartingPoint +
+            (columnIndex * (deviceWidth + devicePadding)) *
+                (lenientLayout ? 1.25 : 1.15);
         break;
+      default:
+        leftStartingPoint = leftStartingPoint;
     }
 
-    print(maxHeight);
     return Positioned(
       left: leftStartingPoint,
       top: maxHeight * startingPoint,
       child: Transform.rotate(
-        // angle: 0,
         angle: 35 * 3.141592653589793 / 180,
         child: Column(
           children: [
             // check if widgets[i] is availablef for each positioned.
-            if (widgets.length > 0)
+            if (widgets.isNotEmpty)
               _buildPositionedScreen(widgets[0], deviceHeight, deviceWidth,
                   devicePadding, deviceBorder),
             if (widgets.length > 1)
               _buildPositionedScreen(widgets[1], deviceHeight, deviceWidth,
                   devicePadding, deviceBorder),
-            // if (widgets.length > 2)
-            //   _buildPositionedScreen(widgets[2], deviceHeight, deviceWidth,
-            //       devicePadding, deviceBorder)
           ],
         ),
       ),
