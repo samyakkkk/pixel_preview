@@ -38,8 +38,10 @@ class PixelApp extends StatelessWidget {
                 foregroundColor: Colors.white,
               )
             : null,
-        body: IframeGridBuilder(
+        body:
+         IframeGridBuilder(
           groups: groups,
-        ));
+        )
+        );
   }
 }

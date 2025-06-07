@@ -65,6 +65,7 @@ class GridItem extends StatelessWidget {
         enabled: child.enabled,
         thumbnailMode: true,
         name: child.name,
+        keepBorder: true,
         child: child.child,
       );
     }
@@ -86,7 +87,7 @@ class GridItem extends StatelessWidget {
           ),
         );
       },
-      child: IgnorePointer(child: thumbnailChild, ignoring: false,),
+      child:  thumbnailChild,
     );
   }
 }

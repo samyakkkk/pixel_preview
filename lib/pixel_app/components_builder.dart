@@ -75,6 +75,7 @@ class _IframeGridBuilderState extends State<IframeGridBuilder> {
                         setState(() {
                           _selectedGroup = newValue;
                         });
+                        _scrollController.jumpTo(0);
                       },
                       style: Theme.of(context).textTheme.titleMedium,
                       dropdownColor: Theme.of(context).canvasColor,

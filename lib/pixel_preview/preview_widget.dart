@@ -49,6 +49,8 @@ class PixelPreview extends StatefulWidget {
 
   final String name;
 
+  final bool keepBorder;
+
   /// Creates a PixelPreview widget.
   ///
   /// The type of preset [ComponentPresets] or [ScreenPresets] determines
@@ -59,6 +61,7 @@ class PixelPreview extends StatefulWidget {
       required this.presets,
       this.enabled = !kReleaseMode,
       this.thumbnailMode = false,
+      this.keepBorder = false,
       String? name})
       : name = name ?? child.toString();
   @override
@@ -141,6 +144,7 @@ class _PixelPreviewState extends State<PixelPreview> {
                       });
                     },
                     isThumbnail: widget.thumbnailMode,
+                    keepBorder: widget.keepBorder,
                     child: widget.child,
                   ),
                 ),

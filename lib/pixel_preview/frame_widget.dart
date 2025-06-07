@@ -13,22 +13,23 @@ class FrameWidget extends StatefulWidget {
   final double maxHeight;
   final Color backgroundColor;
   final bool isThumbnail;
+  final bool keepBorder;
 
   final Function(double, double)? onSizeChanged;
 
-  const FrameWidget({
-    super.key,
-    required this.child,
-    this.initialWidth = 500.0,
-    this.initialHeight = 333.0,
-    this.minWidth = 100.0,
-    this.minHeight = 100.0,
-    this.maxWidth = 2000.0,
-    this.maxHeight = 2000.0,
-    this.backgroundColor = Colors.transparent,
-    this.onSizeChanged,
-    this.isThumbnail = false
-  });
+  const FrameWidget(
+      {super.key,
+      required this.child,
+      this.initialWidth = 500.0,
+      this.initialHeight = 333.0,
+      this.minWidth = 100.0,
+      this.minHeight = 100.0,
+      this.maxWidth = 2000.0,
+      this.maxHeight = 2000.0,
+      this.backgroundColor = Colors.transparent,
+      this.onSizeChanged,
+      this.isThumbnail = false,
+      this.keepBorder = false});
 
   @override
   State<FrameWidget> createState() => _FrameWidgetState();
@@ -98,123 +99,130 @@ class _FrameWidgetState extends State<FrameWidget> {
                     child: Container(
                       width: _width,
                       height: _height,
-                      decoration: !widget.isThumbnail?  PixelTheme.frameBorderDecoration(
-                          backgroundColor: widget.backgroundColor):null,
+                      decoration: (widget.keepBorder || !widget.isThumbnail)
+                          ? PixelTheme.frameBorderDecoration(
+                              backgroundColor: widget.backgroundColor)
+                          : null,
                       child: Center(child: widget.child),
                     ),
                   ),
-if(!widget.isThumbnail)
-                  // Right handle
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    bottom: 0,
-                    child: GestureDetector(
-                      onPanStart: (_) => setState(() => _draggingRight = true),
-                      onPanEnd: (_) {
-                        setState(() => _draggingRight = false);
-                        _notifySizeChanged();
-                      },
-                      onPanUpdate: (details) {
-                        setState(() {
-                          _width = (_width + details.delta.dx / _scale).clamp(
-                            widget.minWidth,
-                            widget.maxWidth,
-                          );
-                        });
-                        _notifySizeChanged();
-                      },
-                      child: Container(
-                        width: handleSize,
-                        color: _draggingRight
-                            ? PixelTheme.activeHandleHighlight
-                            : Colors.transparent,
-                        child: Center(
-                          child: Container(
-                            width: 4,
-                            height: 30,
-                            decoration: PixelTheme.handleDecoration,
+                  if (!widget.isThumbnail)
+                    // Right handle
+                    Positioned(
+                      right: 0,
+                      top: 0,
+                      bottom: 0,
+                      child: GestureDetector(
+                        onPanStart: (_) =>
+                            setState(() => _draggingRight = true),
+                        onPanEnd: (_) {
+                          setState(() => _draggingRight = false);
+                          _notifySizeChanged();
+                        },
+                        onPanUpdate: (details) {
+                          setState(() {
+                            _width = (_width + details.delta.dx / _scale).clamp(
+                              widget.minWidth,
+                              widget.maxWidth,
+                            );
+                          });
+                          _notifySizeChanged();
+                        },
+                        child: Container(
+                          width: handleSize,
+                          color: _draggingRight
+                              ? PixelTheme.activeHandleHighlight
+                              : Colors.transparent,
+                          child: Center(
+                            child: Container(
+                              width: 4,
+                              height: 30,
+                              decoration: PixelTheme.handleDecoration,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-if(!widget.isThumbnail)
-                  // Bottom handle
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: GestureDetector(
-                      onPanStart: (_) => setState(() => _draggingBottom = true),
-                      onPanEnd: (_) {
-                        setState(() => _draggingBottom = false);
-                        _notifySizeChanged();
-                      },
-                      onPanUpdate: (details) {
-                        setState(() {
-                          _height = (_height + details.delta.dy / _scale).clamp(
-                            widget.minHeight,
-                            widget.maxHeight,
-                          );
-                        });
-                        _notifySizeChanged();
-                      },
-                      child: Container(
-                        height: handleSize,
-                        color: _draggingBottom
-                            ? PixelTheme.activeHandleHighlight
-                            : Colors.transparent,
-                        child: Center(
-                          child: Container(
-                            width: 30,
-                            height: 4,
-                            decoration: PixelTheme.handleDecoration,
+                  if (!widget.isThumbnail)
+                    // Bottom handle
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: GestureDetector(
+                        onPanStart: (_) =>
+                            setState(() => _draggingBottom = true),
+                        onPanEnd: (_) {
+                          setState(() => _draggingBottom = false);
+                          _notifySizeChanged();
+                        },
+                        onPanUpdate: (details) {
+                          setState(() {
+                            _height =
+                                (_height + details.delta.dy / _scale).clamp(
+                              widget.minHeight,
+                              widget.maxHeight,
+                            );
+                          });
+                          _notifySizeChanged();
+                        },
+                        child: Container(
+                          height: handleSize,
+                          color: _draggingBottom
+                              ? PixelTheme.activeHandleHighlight
+                              : Colors.transparent,
+                          child: Center(
+                            child: Container(
+                              width: 30,
+                              height: 4,
+                              decoration: PixelTheme.handleDecoration,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-        if(!widget.isThumbnail)
-                  // Corner handle
-                  Positioned(
-                    right: 0,
-                    bottom: 0,
-                    child: GestureDetector(
-                      onPanStart: (_) => setState(() => _draggingCorner = true),
-                      onPanEnd: (_) {
-                        setState(() => _draggingCorner = false);
-                        _notifySizeChanged();
-                      },
-                      onPanUpdate: (details) {
-                        setState(() {
-                          _width = (_width + details.delta.dx / _scale).clamp(
-                            widget.minWidth,
-                            widget.maxWidth,
-                          );
-                          _height = (_height + details.delta.dy / _scale).clamp(
-                            widget.minHeight,
-                            widget.maxHeight,
-                          );
-                        });
-                        _notifySizeChanged();
-                      },
-                      child: Container(
-                        width: handleSize,
-                        height: handleSize,
-                        color: _draggingCorner
-                            ? PixelTheme.activeHandleHighlight
-                            : Colors.transparent,
-                        child: Center(
-                          child: Icon(
-                            Icons.drag_handle,
-                            size: 16,
-                            color: PixelTheme.primaryBlue,
+                  if (!widget.isThumbnail)
+                    // Corner handle
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      child: GestureDetector(
+                        onPanStart: (_) =>
+                            setState(() => _draggingCorner = true),
+                        onPanEnd: (_) {
+                          setState(() => _draggingCorner = false);
+                          _notifySizeChanged();
+                        },
+                        onPanUpdate: (details) {
+                          setState(() {
+                            _width = (_width + details.delta.dx / _scale).clamp(
+                              widget.minWidth,
+                              widget.maxWidth,
+                            );
+                            _height =
+                                (_height + details.delta.dy / _scale).clamp(
+                              widget.minHeight,
+                              widget.maxHeight,
+                            );
+                          });
+                          _notifySizeChanged();
+                        },
+                        child: Container(
+                          width: handleSize,
+                          height: handleSize,
+                          color: _draggingCorner
+                              ? PixelTheme.activeHandleHighlight
+                              : Colors.transparent,
+                          child: Center(
+                            child: Icon(
+                              Icons.drag_handle,
+                              size: 16,
+                              color: PixelTheme.primaryBlue,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
                 ],
               ),
             ),
