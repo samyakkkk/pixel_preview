@@ -140,6 +140,7 @@ class _PixelPreviewState extends State<PixelPreview> {
                         _height = height;
                       });
                     },
+                    isThumbnail: widget.thumbnailMode,
                     child: widget.child,
                   ),
                 ),

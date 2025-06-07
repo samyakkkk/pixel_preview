@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pixel_preview/pixel_app/components_builder.dart';
 import 'package:pixel_preview/pixel_app/pixel_group.dart';
+import 'package:pixel_preview/pixel_preview.dart';
 import 'package:pixel_preview/pixel_thumbnail/thumbnail_builder.dart';
 import 'package:pixel_preview/utils/pixel_theme.dart';
 
@@ -11,36 +12,22 @@ import 'package:pixel_preview/utils/pixel_theme.dart';
 /// Note: The widgets provided to this class should already be wrapped in PixelPreview widgets.
 ///
 /// Screens support is coming in a future update.
-class PixelApp extends StatelessWidget {
+class PixelThumbnail extends StatelessWidget {
   /// List of all widgets (currently only components are supported) to display
-  final List<PixelGroup> groups;
-
-  /// Optional title for the app
-  final String title;
-
-  /// Whether PixelApp is displayed within an iframe in your website.
-  final bool iFrameMode;
+  final List<PixelPreview> groups;
 
   final double gridSpacing = 24.0;
-  const PixelApp({
+  const PixelThumbnail({
     super.key,
     required this.groups,
-    this.title = 'Pixel Preview',
-    this.iFrameMode = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: !iFrameMode
-            ? AppBar(
-                title: Text(title),
-                backgroundColor: PixelTheme.primaryBlue,
-                foregroundColor: Colors.white,
-              )
-            : null,
-        body: IframeGridBuilder(
-          groups: groups,
-        ));
+        body: ThumbnailBuilder(
+      groups: groups,
+      canvasSize: Size(1000, 1000),
+    ));
   }
 }

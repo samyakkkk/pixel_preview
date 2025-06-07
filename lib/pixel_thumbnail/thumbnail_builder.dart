@@ -4,7 +4,7 @@ import 'package:pixel_preview/pixel_preview/preview_widget.dart'; // Added for P
 import 'package:pixel_preview/utils/presets.dart';
 
 class ThumbnailBuilder extends StatelessWidget {
-  final List<PixelGroup> groups;
+  final List<PixelPreview> groups;
   final Size canvasSize;
   final int maxScreensOverlay;
   final double targetScreenPercentageOfCanvas;
@@ -28,7 +28,7 @@ class ThumbnailBuilder extends StatelessWidget {
     const double screenSpacing = 10.0; // Spacing between screens
     return LayoutBuilder(builder: (context, constraints) {
       final screenRatio = constraints.maxWidth / constraints.maxHeight;
-      final ratio = 1.5;
+      final ratio = 1.66;
       late double height;
       late double width;
       if (screenRatio >= ratio) {
@@ -46,55 +46,89 @@ class ThumbnailBuilder extends StatelessWidget {
             width: width,
             child: LayoutBuilder(builder: (context, constraints) {
               return Stack(children: [
+                // Positioned(
+                //     left: constraints.maxHeight * 0.1,
+                //     top: constraints.maxHeight * 0.1,
+                //     child: Image.network(
+                //       'https://cdn-images-1.medium.com/v2/resize:fit:1200/1*KKM72hHVmUGEP4kD3GffbQ.jpeg',
+                //       height: constraints.maxHeight * 0.2,
+                //     )),
                 Positioned(
-                    left: 45,
-                    top: 45,
-                    child: Image.network(
-                      'https://cdn-images-1.medium.com/v2/resize:fit:1200/1*KKM72hHVmUGEP4kD3GffbQ.jpeg',
-                      height: 100,
-                    )),
-                Positioned(
-                    left: 25,
-                    bottom: 45,
+                    left: constraints.maxHeight * 0.1,
+                    top: constraints.maxHeight * 0.1,
                     child: Image.network(
                       'https://upload.wikimedia.org/wikipedia/commons/1/17/Google-flutter-logo.png',
-                      height: 40,
+                      height: constraints.maxHeight * 0.1,
                     )),
-                ..._buildColumn(
-                    groups[0].children, constraints.maxHeight, 0.1, 0),
-                ..._buildColumn(
-                    groups[0].children, constraints.maxHeight, 0.3, 1),
-                ..._buildColumn(
-                    groups[0].children, constraints.maxHeight, 0.1, 2),
-                ..._buildColumn(
-                    groups[0].children, constraints.maxHeight, 0.3, 3),
+
+                _buildColumn(
+                    groups.sublist(0, 3), constraints.maxHeight, -0.4, 0),
+                _buildColumn(
+                    groups.sublist(3, 6), constraints.maxHeight, -0.5, 1),
+                _buildColumn(
+                    groups.sublist(6, 7), constraints.maxHeight, 0.38, 2)
+
+                // ..._buildColumn(
+                //     groups[0].children, constraints.maxHeight, 0.3, 3),
               ]);
             })),
       );
     });
   }
 
-  List<Widget> _buildColumn(List<PixelPreview> widgets, double maxHeight,
+  Widget _buildColumn(List<PixelPreview> widgets, double maxHeight,
       double startingPoint, int columnIndex) {
-    final deviceHeightRatio = 0.73;
-    final paddingRatio = 0.01;
+    final deviceHeightRatio = 0.9;
+    final paddingRatio = 0.02;
     final totalRatio = deviceHeightRatio + (2 * paddingRatio);
     final deviceHeight = maxHeight * deviceHeightRatio;
+    final deviceWidth = deviceHeight * widgets[0].presets.aspectRatio;
     final devicePadding = maxHeight * paddingRatio;
-    final double leftStartingPoint = maxHeight * 0.25 + (columnIndex * 330);
-    print(leftStartingPoint);
-    return [
-      _buildPositionedScreen(widgets[0], deviceHeight, devicePadding,
-          leftStartingPoint, maxHeight * (startingPoint - totalRatio)),
-      _buildPositionedScreen(widgets[1], deviceHeight, devicePadding,
-          leftStartingPoint, maxHeight * startingPoint),
-      _buildPositionedScreen(widgets[2], deviceHeight, devicePadding,
-          leftStartingPoint, maxHeight * (startingPoint + totalRatio))
-    ];
+    final deviceBorder = maxHeight * 0.025;
+    late double leftStartingPoint;
+    switch (columnIndex) {
+      case 0:
+        leftStartingPoint = maxHeight * 0.11;
+        break;
+      case 1:
+        leftStartingPoint = maxHeight * 0.11 +
+            (columnIndex * (deviceWidth + devicePadding) * 1.5);
+        break;
+      case 2:
+        leftStartingPoint = maxHeight * 0.11 +
+            (columnIndex * (deviceWidth + devicePadding)) * 1.468;
+      default:
+        leftStartingPoint = maxHeight * 0.11;
+        break;
+    }
+
+    print(maxHeight);
+    return Positioned(
+      left: leftStartingPoint,
+      top: maxHeight * startingPoint,
+      child: Transform.rotate(
+        // angle: 0,
+        angle: 35 * 3.141592653589793 / 180,
+        child: Column(
+          children: [
+            // check if widgets[i] is availablef for each positioned.
+            if (widgets.length > 0)
+              _buildPositionedScreen(widgets[0], deviceHeight, deviceWidth,
+                  devicePadding, deviceBorder),
+            if (widgets.length > 1)
+              _buildPositionedScreen(widgets[1], deviceHeight, deviceWidth,
+                  devicePadding, deviceBorder),
+            if (widgets.length > 2)
+              _buildPositionedScreen(widgets[2], deviceHeight, deviceWidth,
+                  devicePadding, deviceBorder)
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildPositionedScreen(PixelPreview widgetToRender, double height,
-      double padding, double left, double top) {
+      double width, double padding, double borderRadius) {
     PixelPreview child = widgetToRender;
 
     child = PixelPreview(
@@ -105,17 +139,13 @@ class ThumbnailBuilder extends StatelessWidget {
       child: child.child,
     );
 
-    return Positioned(
-      left: left,
-      top: top,
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: padding),
-        child: SizedBox(
-          width: height * child.presets.aspectRatio,
-          height: height,
-          child:
-              ClipRRect(borderRadius: BorderRadius.circular(12), child: child),
-        ),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: padding),
+      child: SizedBox(
+        width: width,
+        height: height,
+        child: ClipRRect(
+            borderRadius: BorderRadius.circular(borderRadius), child: child),
       ),
     );
   }

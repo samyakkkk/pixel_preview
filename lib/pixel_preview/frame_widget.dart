@@ -12,6 +12,7 @@ class FrameWidget extends StatefulWidget {
   final double maxWidth;
   final double maxHeight;
   final Color backgroundColor;
+  final bool isThumbnail;
 
   final Function(double, double)? onSizeChanged;
 
@@ -26,6 +27,7 @@ class FrameWidget extends StatefulWidget {
     this.maxHeight = 2000.0,
     this.backgroundColor = Colors.transparent,
     this.onSizeChanged,
+    this.isThumbnail = false
   });
 
   @override
@@ -96,12 +98,12 @@ class _FrameWidgetState extends State<FrameWidget> {
                     child: Container(
                       width: _width,
                       height: _height,
-                      decoration: PixelTheme.frameBorderDecoration(
-                          backgroundColor: widget.backgroundColor),
+                      decoration: !widget.isThumbnail?  PixelTheme.frameBorderDecoration(
+                          backgroundColor: widget.backgroundColor):null,
                       child: Center(child: widget.child),
                     ),
                   ),
-
+if(!widget.isThumbnail)
                   // Right handle
                   Positioned(
                     right: 0,
@@ -137,7 +139,7 @@ class _FrameWidgetState extends State<FrameWidget> {
                       ),
                     ),
                   ),
-
+if(!widget.isThumbnail)
                   // Bottom handle
                   Positioned(
                     bottom: 0,
@@ -173,7 +175,7 @@ class _FrameWidgetState extends State<FrameWidget> {
                       ),
                     ),
                   ),
-
+        if(!widget.isThumbnail)
                   // Corner handle
                   Positioned(
                     right: 0,
