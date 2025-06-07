@@ -62,11 +62,11 @@ class ThumbnailBuilder extends StatelessWidget {
                     )),
 
                 _buildColumn(
-                    groups.sublist(0, 3), constraints.maxHeight, -0.4, 0),
+                    groups.sublist(0, 2), constraints.maxHeight, -0.3, 0),
                 _buildColumn(
-                    groups.sublist(3, 6), constraints.maxHeight, -0.5, 1),
+                    groups.sublist(2,4), constraints.maxHeight, -0.5, 1),
                 _buildColumn(
-                    groups.sublist(6, 7), constraints.maxHeight, 0.38, 2)
+                    groups.sublist(4, 5), constraints.maxHeight, 0.38, 2)
 
                 // ..._buildColumn(
                 //     groups[0].children, constraints.maxHeight, 0.3, 3),
@@ -88,17 +88,17 @@ class ThumbnailBuilder extends StatelessWidget {
     late double leftStartingPoint;
     switch (columnIndex) {
       case 0:
-        leftStartingPoint = maxHeight * 0.11;
+        leftStartingPoint = maxHeight * 0.34;
         break;
       case 1:
-        leftStartingPoint = maxHeight * 0.11 +
-            (columnIndex * (deviceWidth + devicePadding) * 1.5);
+        leftStartingPoint = maxHeight * 0.34 +
+            (columnIndex * (deviceWidth + devicePadding) * 1.635);
         break;
       case 2:
-        leftStartingPoint = maxHeight * 0.11 +
-            (columnIndex * (deviceWidth + devicePadding)) * 1.468;
+        leftStartingPoint = maxHeight * 0.34 +
+            (columnIndex * (deviceWidth + devicePadding)) * 1.15;
       default:
-        leftStartingPoint = maxHeight * 0.11;
+        leftStartingPoint = maxHeight * 0.34;
         break;
     }
 
@@ -118,9 +118,9 @@ class ThumbnailBuilder extends StatelessWidget {
             if (widgets.length > 1)
               _buildPositionedScreen(widgets[1], deviceHeight, deviceWidth,
                   devicePadding, deviceBorder),
-            if (widgets.length > 2)
-              _buildPositionedScreen(widgets[2], deviceHeight, deviceWidth,
-                  devicePadding, deviceBorder)
+            // if (widgets.length > 2)
+            //   _buildPositionedScreen(widgets[2], deviceHeight, deviceWidth,
+            //       devicePadding, deviceBorder)
           ],
         ),
       ),
